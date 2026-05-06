@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colectivos — Samplia Insights</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:       #CF3257;
+    --red-dark:  #A82040;
+    --red-light: #F0D0D8;
+    --navy:      #0E1B30;
+    --navy-mid:  #1A2F50;
+    --green:     #1D7A5F;
+    --green-light:#E6F4F0;
+    --blue-soft: #B0C8DF;
+    --blue-deep: #1C3E6E;
+    --gold:      #E8A030;
+    --white:     #FFFFFF;
+    --off-white: #F8F7F5;
+    --gray:      #EDEDEC;
+    --gray-mid:  #B0AFA8;
+    --text:      #1A1A1A;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  /* ─── PARALLAX OVERLAY ─── */
+  .parallax-overlay {
+    position:absolute; inset:0; z-index:1; pointer-events:none;
+  }
+  .parallax-shapes {
+    position:absolute; inset:0; overflow:hidden; z-index:1; pointer-events:none;
+  }
+  .pshape {
+    position:absolute; border-radius:50%; will-change:transform;
+  }
+
+  /* ─── ICON SYSTEM ─── */
+  .icon-wrap {
+    display:inline-flex; align-items:center; justify-content:center;
+    border-radius:16px; flex-shrink:0;
+  }
+  .icon-wrap svg { display:block; }
+  .seg-icon { display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+  .seg-icon .icon-wrap { width:64px; height:64px; background:rgba(255,255,255,.18); border:1.5px solid rgba(255,255,255,.3); border-radius:20px; }
+  .topic-icon .icon-wrap { width:52px; height:52px; border-radius:16px; }
+  .mascota-icon { margin-bottom:16px; }
+  .mascota-icon .icon-wrap { width:80px; height:80px; border-radius:24px; }
+  .servicio-heading { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+  .servicio-heading .icon-wrap { width:36px; height:36px; background:rgba(176,200,223,.15); border-radius:10px; }
+  .servicio-heading span { font-size:15px; font-weight:600; color:var(--blue-soft); }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--off-white);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 48px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.1); }
+  .nav-logo { display:flex; align-items:center; gap:10px; }
+  .nav-logo .logo-icon {
+    width:36px; height:36px; background:var(--red); border-radius:10px;
+    display:grid; place-items:center;
+  }
+  .nav-logo .logo-icon svg { width:20px; height:20px; fill:white; }
+  .nav-logo span { font-family:'Poppins',sans-serif; font-weight:700; font-size:16px; }
+  .nav-logo small { font-size:10px; color:var(--gray-mid); display:block; font-weight:400; }
+  .nav-pills { display:flex; gap:8px; }
+  .nav-pill {
+    padding:6px 16px; border-radius:20px; font-size:12px; font-weight:500;
+    cursor:pointer; transition:.2s; border:none;
+    background:var(--gray); color:var(--text); text-decoration:none;
+  }
+  .nav-pill:hover, .nav-pill.active { background:var(--red); color:white; }
+  .nav-tag {
+    font-size:11px; background:var(--red-light); color:var(--red);
+    padding:4px 12px; border-radius:20px; font-weight:600;
+  }
+
+  /* ─── PARALLAX SYSTEM ─── */
+  .parallax-section {
+    position:relative; overflow:hidden;
+    min-height: 100vh;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  .parallax-bg {
+    position:absolute; inset:-20%; background-attachment:fixed;
+    background-size:cover; background-position:center;
+    will-change:transform;
+  }
+  .section-inner {
+    position:relative; z-index:2;
+    max-width:1200px; margin:0 auto; width:100%;
+    padding: 120px 48px 80px;
+  }
+
+  /* ─── HERO ─── */
+  #hero {
+    background:var(--white);
+    min-height:100vh;
+  }
+  .hero-bg {
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse 80% 60% at 80% 50%, #F0D0D840 0%, transparent 60%),
+                radial-gradient(ellipse 40% 80% at 10% 10%, #CF325715 0%, transparent 50%);
+  }
+  .hero-corner-tl {
+    position:absolute; top:0; left:0;
+    width:120px; height:120px;
+    background:var(--red);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+  .hero-corner-br {
+    position:absolute; bottom:0; right:0;
+    width:160px; height:100px;
+    background:var(--red);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+  .hero-inner {
+    position:relative; z-index:2;
+    max-width:1200px; margin:0 auto; padding:0 48px;
+    display:flex; flex-direction:column; justify-content:center;
+    min-height:100vh;
+  }
+  .hero-pills { display:flex; gap:10px; margin-bottom:32px; }
+  .pill {
+    padding:8px 20px; border-radius:30px; font-size:13px; font-weight:600;
+    border:2px solid var(--text);
+  }
+  .pill.active { background:var(--red); border-color:var(--red); color:white; }
+  .hero-title {
+    font-family:'Poppins',sans-serif; font-size:clamp(72px, 10vw, 130px);
+    font-weight:800; line-height:.9; letter-spacing:-3px;
+    margin-bottom:32px;
+  }
+  .hero-title span { color:var(--red); }
+  .hero-sub {
+    font-size:16px; color:#555; max-width:520px; line-height:1.7;
+    margin-bottom:48px;
+  }
+  .hero-btns { display:flex; gap:16px; }
+  .btn-primary {
+    padding:14px 32px; background:var(--red); color:white;
+    border-radius:30px; font-weight:600; font-size:14px;
+    border:none; cursor:pointer; transition:.2s; text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-primary:hover { background:var(--red-dark); transform:translateY(-2px); }
+  .btn-outline {
+    padding:14px 32px; background:transparent; color:var(--text);
+    border-radius:30px; font-weight:600; font-size:14px;
+    border:2px solid var(--text); cursor:pointer; transition:.2s;
+    text-decoration:none;
+  }
+  .btn-outline:hover { background:var(--text); color:white; }
+  .hero-badge {
+    position:absolute; right:80px; top:50%;
+    transform:translateY(-50%) rotate(-8deg);
+    background:var(--navy); color:white;
+    padding:20px 28px; border-radius:20px;
+    text-align:center;
+  }
+  .hero-badge .big { font-family:'Poppins',sans-serif; font-size:42px; font-weight:800; }
+  .hero-badge small { font-size:11px; opacity:.7; display:block; margin-top:2px; }
+  .hero-badge .sub { font-size:13px; font-weight:500; }
+
+  /* ─── SECTION HEADERS ─── */
+  .section-label {
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+    margin-bottom:16px; color:var(--red);
+  }
+  .section-label::before {
+    content:''; width:24px; height:2px; background:var(--red);
+  }
+  .section-title {
+    font-family:'Poppins',sans-serif; font-size:clamp(32px,4vw,52px);
+    font-weight:800; line-height:1.05; margin-bottom:16px;
+  }
+  .section-desc { font-size:15px; color:#666; line-height:1.7; max-width:600px; margin-bottom:48px; }
+
+  /* ─── STATS OVERVIEW ─── */
+  #overview { background:var(--white); }
+  .stats-grid {
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px;
+    margin-bottom:40px;
+  }
+  .stat-card {
+    background:var(--off-white); border-radius:20px; padding:32px;
+    border:1px solid var(--gray); transition:.3s;
+    position:relative; overflow:hidden;
+  }
+  .stat-card:hover { transform:translateY(-4px); box-shadow:0 12px 40px rgba(0,0,0,0.08); }
+  .stat-card::after {
+    content:''; position:absolute; bottom:0; left:0; right:0;
+    height:3px; background:var(--red); transform:scaleX(0);
+    transform-origin:left; transition:.3s;
+  }
+  .stat-card:hover::after { transform:scaleX(1); }
+  .stat-card.navy-card { background:var(--navy); color:white; }
+  .stat-card.navy-card .stat-label { color:rgba(255,255,255,.6); }
+  .stat-card.red-card { background:var(--red); color:white; }
+  .stat-card.red-card .stat-label { color:rgba(255,255,255,.7); }
+  .stat-num {
+    font-family:'Poppins',sans-serif; font-size:clamp(36px,4vw,56px);
+    font-weight:800; line-height:1; margin-bottom:8px;
+  }
+  .stat-label { font-size:13px; color:#888; font-weight:500; }
+  .stat-sub { font-size:12px; margin-top:12px; }
+
+  .location-strip {
+    background:var(--navy); border-radius:20px; padding:28px 36px;
+    display:flex; align-items:center; gap:24px;
+    color:white;
+  }
+  .location-dot {
+    width:14px; height:14px; background:var(--red); border-radius:50%; flex-shrink:0;
+  }
+  .location-strip strong { font-family:'Poppins',sans-serif; font-size:22px; }
+  .location-divider { width:1px; height:36px; background:rgba(255,255,255,.2); }
+
+  .charts-row {
+    display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px;
+  }
+  .chart-card {
+    background:var(--navy); border-radius:20px; padding:28px; color:white;
+  }
+  .chart-title { font-size:13px; opacity:.7; margin-bottom:20px; font-weight:500; }
+
+  /* Gender donut */
+  .donut-wrap { display:flex; align-items:center; gap:24px; }
+  .donut-svg { flex-shrink:0; }
+  .donut-legend { display:flex; flex-direction:column; gap:12px; }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size:13px; }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+  /* Bar chart */
+  .bar-chart { display:flex; flex-direction:column; gap:8px; }
+  .bar-row { display:flex; align-items:center; gap:10px; }
+  .bar-label { font-size:11px; width:80px; flex-shrink:0; opacity:.8; text-align:right; }
+  .bar-track { flex:1; height:8px; background:rgba(255,255,255,.1); border-radius:4px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:4px; transition:width 1.2s cubic-bezier(.4,0,.2,1); width:0; }
+  .bar-val { font-size:11px; width:36px; flex-shrink:0; opacity:.8; }
+
+  /* ─── USO APP ─── */
+  #uso { background:var(--off-white); }
+  .uso-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .uso-card {
+    background:white; border-radius:20px; padding:32px;
+    border:1px solid var(--gray);
+  }
+  .uso-card h3 {
+    font-family:'Poppins',sans-serif; font-size:18px; font-weight:700;
+    margin-bottom:20px; color:var(--navy);
+  }
+  .channel-list { display:flex; flex-direction:column; gap:12px; }
+  .channel-item { display:flex; align-items:center; gap:12px; }
+  .channel-pct { font-family:'Poppins',sans-serif; font-size:22px; font-weight:800; color:var(--red); width:52px; flex-shrink:0; }
+  .channel-name { font-size:14px; font-weight:500; }
+  .channel-bar { flex:1; height:6px; background:var(--gray); border-radius:3px; overflow:hidden; }
+  .channel-bar-fill { height:100%; background:var(--red); border-radius:3px; transition:width 1s; width:0; }
+
+  .phygital-card {
+    background:var(--navy); color:white; border-radius:20px; padding:32px;
+    grid-column:1/-1;
+  }
+  .phygital-card h3 { font-family:'Poppins',sans-serif; font-size:24px; font-weight:800; margin-bottom:12px; }
+  .phygital-card p { font-size:14px; opacity:.8; line-height:1.7; max-width:560px; }
+  .phygital-tag {
+    display:inline-block; margin-top:16px; padding:8px 20px;
+    background:var(--red); border-radius:20px; font-size:12px; font-weight:600;
+  }
+
+  /* ─── GEOGRAFIA ─── */
+  #geo { background:var(--navy); color:white; }
+  #geo .section-label { color:#B0C8DF; }
+  #geo .section-label::before { background:#B0C8DF; }
+  #geo .section-title { color:white; }
+  #geo .section-desc { color:rgba(255,255,255,.7); }
+  .geo-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+  .geo-card {
+    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+    border-radius:20px; padding:28px;
+  }
+  .geo-card .pct { font-family:'Poppins',sans-serif; font-size:56px; font-weight:800; color:var(--red); line-height:1; }
+  .geo-card .city { font-size:13px; opacity:.6; margin-top:4px; }
+  .geo-card .desc { font-size:13px; margin-top:16px; opacity:.8; line-height:1.6; }
+  .map-placeholder {
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+    border-radius:20px; padding:32px; text-align:center;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    min-height:160px;
+  }
+  .map-placeholder svg { opacity:.3; margin-bottom:12px; }
+  .map-placeholder span { font-size:12px; opacity:.5; }
+
+  /* ─── FAMILIA ─── */
+  #familia { background:var(--white); }
+  .kpi-strip {
+    display:grid; grid-template-columns:repeat(7,1fr); gap:12px; margin-bottom:32px;
+  }
+  .kpi-chip {
+    background:var(--blue-soft); border-radius:14px; padding:16px 12px; text-align:center;
+  }
+  .kpi-chip .kpi-num { font-family:'Poppins',sans-serif; font-size:26px; font-weight:800; color:var(--navy); }
+  .kpi-chip .kpi-lbl { font-size:10px; color:var(--blue-deep); font-weight:500; line-height:1.3; margin-top:4px; }
+  .kpi-chip.highlight .kpi-num { color:var(--red); }
+  .dark-chart-card {
+    background:var(--navy); border-radius:20px; padding:28px; color:white;
+  }
+  .dark-chart-card h3 { font-family:'Poppins',sans-serif; font-size:18px; font-weight:700; margin-bottom:20px; color:#B0C8DF; }
+
+  /* ─── OCUPACION ─── */
+  #ocupacion { background:var(--off-white); }
+  .ingreso-list { display:flex; flex-direction:column; gap:10px; }
+  .ingreso-row { display:flex; align-items:center; gap:12px; }
+  .ingreso-label { font-size:12px; width:160px; flex-shrink:0; color:#555; }
+  .ingreso-track { flex:1; height:10px; background:var(--gray); border-radius:5px; overflow:hidden; }
+  .ingreso-fill { height:100%; border-radius:5px; background:var(--green); transition:width 1.2s; width:0; }
+  .ingreso-val { font-size:12px; font-weight:700; width:32px; text-align:right; }
+  .modal-pct { font-family:'Poppins',sans-serif; font-size:18px; font-weight:700; color:var(--green); }
+
+  /* ─── SERVICIOS ─── */
+  #servicios { background:var(--navy); color:white; }
+  #servicios .section-label { color:rgba(255,255,255,.5); }
+  #servicios .section-label::before { background:rgba(255,255,255,.5); }
+  #servicios .section-title { color:white; }
+  #servicios .section-desc { color:rgba(255,255,255,.65); }
+  .servicios-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .servicio-card { background:rgba(255,255,255,.07); border-radius:20px; padding:28px; }
+  .servicio-card h3 { font-size:15px; font-weight:600; margin-bottom:18px; color:var(--blue-soft); }
+  .ranking-list { display:flex; flex-direction:column; gap:8px; }
+  .ranking-item { display:flex; align-items:center; gap:10px; }
+  .rank-name { font-size:12px; width:130px; flex-shrink:0; opacity:.9; }
+  .rank-track { flex:1; height:7px; background:rgba(255,255,255,.1); border-radius:4px; overflow:hidden; }
+  .rank-fill { height:100%; background:linear-gradient(90deg, var(--blue-soft), var(--red)); border-radius:4px; transition:width 1s; width:0; }
+  .rank-pct { font-size:11px; width:32px; text-align:right; opacity:.8; }
+
+  /* ─── TEMATICAS ─── */
+  #tematicas { background:var(--off-white); }
+  .topics-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .topic-card {
+    border-radius:20px; padding:28px; text-align:center;
+    transition:.3s; cursor:default;
+  }
+  .topic-card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(0,0,0,0.12); }
+  .topic-icon { font-size:36px; margin-bottom:12px; }
+  .topic-pct { font-family:'Poppins',sans-serif; font-size:36px; font-weight:800; }
+  .topic-name { font-size:13px; margin-top:4px; font-weight:500; }
+
+  /* ─── DIETA ─── */
+  #dieta { background:var(--white); }
+  .dieta-grid { display:grid; grid-template-columns:repeat(4,1fr) 1fr 1fr 1fr; gap:16px; }
+  .dieta-card {
+    border-radius:20px; padding:24px;
+    border:2px solid var(--gray);
+    transition:.3s;
+  }
+  .dieta-card:hover { border-color:var(--red); }
+  .dieta-card.big { grid-column:span 1; }
+  .dieta-pct { font-family:'Poppins',sans-serif; font-size:42px; font-weight:800; color:var(--red); }
+  .dieta-name { font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin:8px 0 4px; }
+  .dieta-desc { font-size:11px; color:#888; line-height:1.5; }
+
+  /* ─── MASCOTAS ─── */
+  #mascotas { background:var(--off-white); }
+  .mascotas-tabs { display:flex; gap:8px; margin-bottom:36px; }
+  .tab-btn {
+    padding:10px 24px; border-radius:30px; font-size:13px; font-weight:600;
+    border:2px solid var(--gray); background:white; cursor:pointer; transition:.2s;
+  }
+  .tab-btn.active { background:var(--navy); border-color:var(--navy); color:white; }
+  .tab-content { display:none; }
+  .tab-content.active { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .mascota-hero {
+    background:var(--navy); border-radius:24px; padding:36px; color:white;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .mascota-emoji { font-size:64px; margin-bottom:16px; }
+  .mascota-num { font-family:'Poppins',sans-serif; font-size:48px; font-weight:800; }
+  .mascota-sub { font-size:13px; opacity:.65; margin-top:4px; }
+  .mascota-stat { margin-top:20px; }
+  .mascota-stat strong { color:var(--red); font-family:'Poppins',sans-serif; font-size:24px; }
+  .mascota-stat span { font-size:13px; opacity:.8; }
+  .mascota-details { display:flex; flex-direction:column; gap:16px; }
+  .mascota-info-card {
+    background:white; border-radius:16px; padding:20px;
+    border:1px solid var(--gray);
+  }
+  .mascota-info-card h4 { font-size:13px; color:#888; margin-bottom:14px; font-weight:500; }
+  .gender-row { display:flex; gap:12px; }
+  .gender-chip { flex:1; background:var(--gray); border-radius:12px; padding:12px; text-align:center; }
+  .gender-chip .g-num { font-family:'Poppins',sans-serif; font-size:22px; font-weight:800; }
+  .gender-chip .g-lbl { font-size:11px; color:#888; }
+  .gender-chip.fem { background:var(--red-light); }
+  .gender-chip.masc { background:#E0E8F4; }
+
+  /* ─── USUARIAS ─── */
+  #usuarias { background:linear-gradient(135deg, var(--red-dark) 0%, var(--red) 40%, #E8607A 100%); color:white; }
+  #usuarias .section-label { color:rgba(255,255,255,.6); }
+  #usuarias .section-label::before { background:rgba(255,255,255,.6); }
+  #usuarias .section-title { color:white; }
+  #usuarias .section-desc { color:rgba(255,255,255,.8); }
+  .usuarias-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; }
+  .usuaria-segment {
+    background:rgba(255,255,255,.12); backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:24px; padding:32px;
+    transition:.3s;
+  }
+  .usuaria-segment:hover { background:rgba(255,255,255,.2); transform:translateY(-4px); }
+  .seg-icon { font-size:42px; margin-bottom:16px; }
+  .seg-name { font-family:'Poppins',sans-serif; font-size:22px; font-weight:800; }
+  .seg-desc { font-size:13px; opacity:.8; margin-top:8px; line-height:1.6; }
+  .seg-tag {
+    display:inline-block; margin-top:16px;
+    background:rgba(255,255,255,.2); padding:6px 14px;
+    border-radius:20px; font-size:11px; font-weight:600;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background:var(--text); color:white;
+    padding:48px; text-align:center;
+  }
+  footer .f-logo { font-family:'Poppins',sans-serif; font-size:28px; font-weight:800; margin-bottom:8px; }
+  footer .f-logo span { color:var(--red); }
+  footer .f-tag { font-size:12px; opacity:.5; margin-bottom:24px; }
+  footer .f-line { width:40px; height:2px; background:var(--red); margin:20px auto; }
+  footer small { font-size:11px; opacity:.35; }
+
+  /* ─── ANIMATIONS ─── */
+  .reveal {
+    opacity:0; transform:translateY(32px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .reveal-delay-1 { transition-delay:.1s; }
+  .reveal-delay-2 { transition-delay:.2s; }
+  .reveal-delay-3 { transition-delay:.3s; }
+  .reveal-delay-4 { transition-delay:.4s; }
+
+  /* ─── SCROLL INDICATOR ─── */
+  .scroll-indicator {
+    position:absolute; bottom:40px; left:50%; transform:translateX(-50%);
+    z-index:5; display:flex; flex-direction:column; align-items:center; gap:8px;
+    opacity:.5;
+  }
+  .scroll-arrow { width:20px; height:20px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); animation:bounce 1.4s infinite; }
+  @keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(5px)} }
+  .scroll-text { font-size:10px; letter-spacing:2px; text-transform:uppercase; }
+
+  /* ─── SECTION BACKGROUNDS ─── */
+  #geo {
+    background: var(--navy);
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B0C8DF' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  #servicios {
+    background: var(--navy);
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23CF3257' fill-opacity='0.06'%3E%3Cpath d='M0 20h40M20 0v40' stroke='%23CF3257' stroke-opacity='0.05' stroke-width='0.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  /* Section separator lines */
+  .parallax-section + .parallax-section {
+    border-top: 1px solid rgba(0,0,0,0.05);
+  }
+  #geo + .parallax-section,
+  #servicios + .parallax-section {
+    border-top: none;
+  }
+  /* Diagonal accent on hero */
+  #hero::after {
+    content:''; position:absolute; bottom:-1px; left:0; right:0;
+    height:80px; background:var(--off-white);
+    clip-path:polygon(0 100%, 100% 100%, 100% 40%, 0 100%);
+    z-index:3;
+  }
+  /* Section bottom edge for dark sections */
+  #geo .section-inner, #servicios .section-inner { position: relative; z-index: 3; }
+  #geo::after {
+    content:''; position:absolute; bottom:-1px; left:0; right:0;
+    height:60px; background:var(--white);
+    clip-path:polygon(0 100%, 100% 100%, 100% 60%, 0 100%);
+    z-index:4;
+  }
+  /* Enhanced card depth on white sections */
+  .uso-card, .mascota-info-card {
+    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  }
+  /* Geo cards stronger */
+  .geo-card {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    backdrop-filter: blur(4px);
+  }
+  .geo-card:hover {
+    background: rgba(255,255,255,.1);
+    transform: translateY(-4px);
+    transition: .3s;
+    border-color: rgba(207,50,87,.5);
+  }
+  /* Stronger mascota hero */
+  .mascota-hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    box-shadow: 0 8px 40px rgba(14,27,48,.25);
+  }
+  /* Enhanced usuaria segments */
+  .usuaria-segment {
+    background: rgba(255,255,255,.1);
+    backdrop-filter: blur(12px);
+  }
+  /* Subtle section number accent */
+  .section-label {
+    letter-spacing: 2.5px;
+  }
+
+
+  /* Geo section shapes */
+  #geo .pshape-1 { width:500px; height:500px; top:-100px; right:-120px; background:radial-gradient(circle, rgba(207,50,87,.18) 0%, transparent 70%); }
+  #geo .pshape-2 { width:360px; height:360px; bottom:-80px; left:-60px; background:radial-gradient(circle, rgba(176,200,223,.15) 0%, transparent 70%); }
+  #geo .pshape-3 { width:200px; height:200px; top:30%; left:38%; background:radial-gradient(circle, rgba(232,160,48,.1) 0%, transparent 70%); }
+
+  /* Familia section shapes */
+  #familia .pshape-1 { width:400px; height:400px; top:-60px; right:-80px; background:radial-gradient(circle, rgba(14,27,48,.07) 0%, transparent 60%); }
+  #familia .pshape-2 { width:250px; height:250px; bottom:40px; left:10%; background:radial-gradient(circle, rgba(207,50,87,.06) 0%, transparent 65%); }
+  #familia .pshape-3 { width:180px; height:180px; top:50%; right:25%; background:radial-gradient(circle, rgba(29,122,95,.08) 0%, transparent 65%); border-radius:50%; }
+
+  /* Ocupacion shapes */
+  #ocupacion .pshape-1 { width:450px; height:450px; top:-100px; right:-100px; background:radial-gradient(circle, rgba(29,122,95,.08) 0%, transparent 65%); }
+  #ocupacion .pshape-2 { width:280px; height:280px; bottom:20px; left:5%; background:radial-gradient(circle, rgba(14,27,48,.05) 0%, transparent 65%); }
+
+  /* Servicios section shapes */
+  #servicios .pshape-1 { width:500px; height:500px; top:-80px; left:-100px; background:radial-gradient(circle, rgba(207,50,87,.2) 0%, transparent 65%); }
+  #servicios .pshape-2 { width:350px; height:350px; bottom:-60px; right:-60px; background:radial-gradient(circle, rgba(176,200,223,.12) 0%, transparent 65%); }
+  #servicios .pshape-3 { width:180px; height:180px; top:40%; right:20%; background:radial-gradient(circle, rgba(232,160,48,.12) 0%, transparent 65%); }
+
+  /* Tematicas shapes */
+  #tematicas .pshape-1 { width:440px; height:440px; top:-60px; right:-80px; background:radial-gradient(circle, rgba(207,50,87,.07) 0%, transparent 65%); }
+  #tematicas .pshape-2 { width:300px; height:300px; bottom:0; left:-60px; background:radial-gradient(circle, rgba(14,27,48,.06) 0%, transparent 65%); }
+  #tematicas .pshape-3 { width:200px; height:200px; top:35%; left:42%; background:radial-gradient(circle, rgba(29,122,95,.08) 0%, transparent 65%); }
+
+  /* Dieta shapes */
+  #dieta .pshape-1 { width:380px; height:380px; top:-50px; right:-60px; background:radial-gradient(circle, rgba(29,122,95,.07) 0%, transparent 65%); }
+  #dieta .pshape-2 { width:260px; height:260px; bottom:20px; left:5%; background:radial-gradient(circle, rgba(207,50,87,.05) 0%, transparent 65%); }
+
+  /* Mascotas shapes */
+  #mascotas .pshape-1 { width:500px; height:500px; top:-80px; right:-80px; background:radial-gradient(circle, rgba(14,27,48,.06) 0%, transparent 65%); }
+  #mascotas .pshape-2 { width:300px; height:300px; bottom:0; left:10%; background:radial-gradient(circle, rgba(207,50,87,.06) 0%, transparent 65%); }
+
+  /* Usuarias shapes */
+  #usuarias .pshape-1 { width:500px; height:500px; top:-100px; right:-80px; background:radial-gradient(circle, rgba(255,255,255,.12) 0%, transparent 65%); }
+  #usuarias .pshape-2 { width:360px; height:360px; bottom:-40px; left:-60px; background:radial-gradient(circle, rgba(255,255,255,.08) 0%, transparent 65%); }
+  #usuarias .pshape-3 { width:180px; height:180px; top:40%; left:42%; background:radial-gradient(circle, rgba(255,255,255,.1) 0%, transparent 65%); }
+
+  /* Hero extra shapes */
+  .hero-shape-1 { position:absolute; width:600px; height:600px; top:10%; right:-150px; background:radial-gradient(circle, rgba(207,50,87,.08) 0%, transparent 65%); border-radius:50%; pointer-events:none; will-change:transform; }
+  .hero-shape-2 { position:absolute; width:300px; height:300px; bottom:10%; left:-80px; background:radial-gradient(circle, rgba(14,27,48,.06) 0%, transparent 65%); border-radius:50%; pointer-events:none; will-change:transform; }
+
+  /* uso shapes */
+  #uso .pshape-1 { width:400px; height:400px; top:-80px; right:-80px; background:radial-gradient(circle, rgba(207,50,87,.06) 0%, transparent 65%); }
+  #uso .pshape-2 { width:250px; height:250px; bottom:20px; left:5%; background:radial-gradient(circle, rgba(14,27,48,.05) 0%, transparent 65%); }
+
+  /* ─── GEOMETRIC LINES (section accents) ─── */
+  .section-line-accent {
+    position:absolute; pointer-events:none; will-change:transform;
+  }
+  .geo-line { bottom:0; left:0; right:0; height:3px; background:linear-gradient(90deg, transparent, var(--red) 30%, var(--blue-soft) 70%, transparent); opacity:.4; }
+
+  @media (max-width:900px) {
+    .stats-grid { grid-template-columns:1fr 1fr; }
+    .charts-row, .geo-grid, .kpi-strip, .topics-grid, .dieta-grid,
+    .usuarias-grid, .servicios-grid, .uso-grid { grid-template-columns:1fr 1fr; }
+    .kpi-strip { grid-template-columns:repeat(4,1fr); }
+    .hero-badge { display:none; }
+    nav { padding:12px 24px; }
+    .nav-pills { display:none; }
+    .section-inner { padding:100px 24px 60px; }
+  }
+  @media (max-width:600px) {
+    .stats-grid, .charts-row, .geo-grid, .topics-grid,
+    .usuarias-grid, .servicios-grid, .uso-grid,
+    .tab-content.active, .dieta-grid { grid-template-columns:1fr; }
+    .kpi-strip { grid-template-columns:repeat(2,1fr); }
+    .hero-title { font-size:58px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <div>
+      <span>Samplia</span>
+      <small>Insights</small>
+    </div>
+  </div>
+  <div class="nav-pills">
+    <a class="nav-pill" href="#overview">Usuarios</a>
+    <a class="nav-pill" href="#geo">Geografía</a>
+    <a class="nav-pill" href="#familia">Perfil</a>
+    <a class="nav-pill" href="#servicios">Servicios</a>
+    <a class="nav-pill" href="#mascotas">Mascotas</a>
+    <a class="nav-pill" href="#usuarias">Usuarias</a>
+  </div>
+  <span class="nav-tag">España 2025</span>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="parallax-section">
+  <div class="hero-bg"></div>
+  <div class="hero-shape-1" data-parallax-speed="0.05"></div>
+  <div class="hero-shape-2" data-parallax-speed="-0.08"></div>
+  <div class="hero-corner-tl"></div>
+  <div class="hero-corner-br"></div>
+  <div class="hero-inner">
+    <div class="hero-pills reveal">
+      <span class="pill">PRUEBA,</span>
+      <span class="pill active">OPINA</span>
+      <span class="pill">Y DISFRUTA</span>
+    </div>
+    <h1 class="hero-title reveal reveal-delay-1">
+      COLEC<span>TIVOS</span>
+    </h1>
+    <p class="hero-sub reveal reveal-delay-2">
+      Cada usuario de nuestra app es distinto, pero su participación, gustos, ubicación y opiniones nos permiten segmentarlos en grandes colectivos.
+    </p>
+    <div class="hero-btns reveal reveal-delay-3">
+      <a href="#overview" class="btn-primary">Descúbrelos →</a>
+      <a href="#usuarias" class="btn-outline">Ver Segmentos</a>
+    </div>
+  </div>
+  <div class="hero-badge reveal reveal-delay-4">
+    <div class="big">1.4M</div>
+    <small>Usuarios activos</small>
+    <div class="sub">España <svg width="20" height="14" viewBox="0 0 20 14" fill="none" style="border-radius:2px;flex-shrink:0;vertical-align:middle;box-shadow:0 1px 4px rgba(0,0,0,.3)"><rect width="20" height="14" fill="#c60b1e"/><rect y="3.5" width="20" height="7" fill="#ffc400"/></svg></div>
+  </div>
+  <div class="scroll-indicator">
+    <span class="scroll-text">scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- OVERVIEW -->
+<section id="overview" class="parallax-section" style="min-height:auto;">
+<div class="parallax-shapes"><div class="pshape pshape-1" data-parallax-speed="0.07"></div><div class="pshape pshape-2" data-parallax-speed="-0.05"></div></div>
+  <div class="section-inner">
+    <div class="section-label reveal">Visión general</div>
+    <h2 class="section-title reveal reveal-delay-1">Usuarios en España</h2>
+    <p class="section-desc reveal reveal-delay-2">Cifras clave de nuestra comunidad de probadores activos en todo el territorio nacional.</p>
+
+    <div class="stats-grid reveal reveal-delay-1">
+      <div class="stat-card navy-card">
+        <div class="stat-num" data-count="1377207" data-format="M">1.37M</div>
+        <div class="stat-label">Total usuarios registrados</div>
+        <div class="stat-sub" style="opacity:.5; font-size:11px;">Usuarios en España</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--red);">78%</div>
+        <div class="stat-label">Tasa de conversión</div>
+        <div class="stat-sub" style="font-size:12px; color:#666;">Compran tras probar con Samplia</div>
+      </div>
+      <div class="stat-card red-card">
+        <div class="stat-num">8,4</div>
+        <div class="stat-label">Calificación media app</div>
+        <div class="stat-sub" style="opacity:.8; font-size:12px;">86% de usuarios satisfechos</div>
+      </div>
+    </div>
+
+    <div class="location-strip reveal reveal-delay-2">
+      <div class="location-dot"></div>
+      <div><strong>64%</strong><div style="font-size:12px; opacity:.6;">Madrid</div></div>
+      <div class="location-divider"></div>
+      <div><strong>29%</strong><div style="font-size:12px; opacity:.6;">Barcelona</div></div>
+      <div class="location-divider"></div>
+      <div><strong>7%</strong><div style="font-size:12px; opacity:.6;">Otras ciudades</div></div>
+      <div class="location-divider"></div>
+      <div style="margin-left:auto; font-size:13px; opacity:.7;">Media mensual nuevos usuarios: <strong style="color:var(--red);">17.612</strong></div>
+    </div>
+
+    <div class="charts-row reveal reveal-delay-3">
+      <!-- Gender donut -->
+      <div class="chart-card">
+        <div class="chart-title">Usuarios por género</div>
+        <div class="donut-wrap">
+          <svg class="donut-svg" width="120" height="120" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="45" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="18"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#B0C8DF" stroke-width="18"
+              stroke-dasharray="169.6 112.6" stroke-linecap="round"
+              transform="rotate(-90 60 60)" style="transition:stroke-dasharray 1.4s ease"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="var(--red)" stroke-width="18"
+              stroke-dasharray="112.6 169.6" stroke-linecap="round"
+              transform="rotate(63 60 60)" style="transition:stroke-dasharray 1.4s ease"/>
+            <text x="60" y="58" text-anchor="middle" fill="white" font-size="14" font-weight="700" font-family="Poppins,sans-serif">57%</text>
+            <text x="60" y="72" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="9">Masculino</text>
+          </svg>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div><span>43% Femenino</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#B0C8DF"></div><span>57% Masculino</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Age bar chart -->
+      <div class="chart-card">
+        <div class="chart-title">Usuarios por rango de edad</div>
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label">18–24</span><div class="bar-track"><div class="bar-fill" style="width:0%; background:#B0C8DF;" data-w="28%"></div></div><span class="bar-val">28%</span></div>
+          <div class="bar-row"><span class="bar-label">25–34</span><div class="bar-track"><div class="bar-fill" style="background:var(--red);" data-w="32%"></div></div><span class="bar-val">32%</span></div>
+          <div class="bar-row"><span class="bar-label">35–44</span><div class="bar-track"><div class="bar-fill" style="background:#B0C8DF;" data-w="24%"></div></div><span class="bar-val">24%</span></div>
+          <div class="bar-row"><span class="bar-label">45–54</span><div class="bar-track"><div class="bar-fill" style="background:#7A9EC0;" data-w="10%"></div></div><span class="bar-val">10%</span></div>
+          <div class="bar-row"><span class="bar-label">55–64</span><div class="bar-track"><div class="bar-fill" style="background:#5A7EA0;" data-w="4%"></div></div><span class="bar-val">4%</span></div>
+          <div class="bar-row"><span class="bar-label">65+</span><div class="bar-track"><div class="bar-fill" style="background:#3A5E80;" data-w="2%"></div></div><span class="bar-val">2%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USO APP -->
+<section id="uso" class="parallax-section" style="min-height:auto;">
+<div class="parallax-shapes"><div class="pshape pshape-1" data-parallax-speed="0.07"></div><div class="pshape pshape-2" data-parallax-speed="-0.05"></div></div>
+  <div class="section-inner">
+    <div class="section-label reveal">Comportamiento</div>
+    <h2 class="section-title reveal reveal-delay-1">Uso de la app</h2>
+    <p class="section-desc reveal reveal-delay-2">Cómo se mueven y comunican nuestros usuarios con la plataforma.</p>
+
+    <div class="uso-grid">
+      <div class="uso-card reveal reveal-delay-1">
+        <h3>¿A dónde van?</h3>
+        <div class="channel-list">
+          <div class="channel-item"><span class="channel-pct">62%</span><span class="channel-name">Circuito de Máquinas</span><div class="channel-bar"><div class="channel-bar-fill" data-w="62%"></div></div></div>
+          <div class="channel-item"><span class="channel-pct">19%</span><span class="channel-name">Gran Vía</span><div class="channel-bar"><div class="channel-bar-fill" data-w="19%"></div></div></div>
+          <div class="channel-item"><span class="channel-pct">8%</span><span class="channel-name">Plaza Callao</span><div class="channel-bar"><div class="channel-bar-fill" data-w="8%"></div></div></div>
+          <div class="channel-item"><span class="channel-pct">4%</span><span class="channel-name">Alcobendas</span><div class="channel-bar"><div class="channel-bar-fill" data-w="4%"></div></div></div>
+        </div>
+      </div>
+      <div class="uso-card reveal reveal-delay-2">
+        <h3>¿Cómo se enteran?</h3>
+        <div class="channel-list">
+          <div class="channel-item"><span class="channel-pct">25%</span><span class="channel-name">Desde la App</span><div class="channel-bar"><div class="channel-bar-fill" data-w="25%"></div></div></div>
+          <div class="channel-item"><span class="channel-pct">25%</span><span class="channel-name">En el lugar</span><div class="channel-bar"><div class="channel-bar-fill" data-w="25%"></div></div></div>
+          <div class="channel-item"><span class="channel-pct">17%</span><span class="channel-name">Instagram</span><div class="channel-bar"><div class="channel-bar-fill" data-w="17%"></div></div></div>
+          <div class="channel-item"><span class="channel-pct">17%</span><span class="channel-name">WOM (boca a boca)</span><div class="channel-bar"><div class="channel-bar-fill" data-w="17%"></div></div></div>
+          <div class="channel-item"><span class="channel-pct">8%</span><span class="channel-name">Emailing</span><div class="channel-bar"><div class="channel-bar-fill" data-w="8%"></div></div></div>
+          <div class="channel-item"><span class="channel-pct">8%</span><span class="channel-name">WhatsApp</span><div class="channel-bar"><div class="channel-bar-fill" data-w="8%"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="phygital-card reveal reveal-delay-3" style="margin-top:24px;">
+      <h3><span style="display:inline-flex;align-items:center;gap:10px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Somos Phygitals</span></h3>
+      <p>La mayoría de nuestros usuarios conoce las campañas que hay en su ciudad a través de la aplicación móvil. Casi la misma cantidad se entera al pasar por una de nuestras máquinas o tiendas pop-up.</p>
+      <span class="phygital-tag">Físico + Digital = Phygital</span>
+    </div>
+  </div>
+</section>
+
+<!-- GEOGRAFIA -->
+<section id="geo" class="parallax-section" style="min-height:auto;">
+<div class="parallax-shapes"><div class="pshape pshape-1" data-parallax-speed="0.08"></div>
+<div class="parallax-overlay" style="background:linear-gradient(135deg, rgba(14,27,48,0.85) 0%, rgba(26,47,80,0.75) 60%, rgba(207,50,87,0.1) 100%);"></div><div class="pshape pshape-2" data-parallax-speed="-0.06"></div><div class="pshape pshape-3" data-parallax-speed="0.12"></div></div>
+  <div class="section-inner">
+    <div class="section-label reveal">Territorio</div>
+    <h2 class="section-title reveal reveal-delay-1">Ubicación geográfica</h2>
+    <p class="section-desc reveal reveal-delay-2">Navega hasta el barrio donde están tus compradores potenciales. Conoce las mayores áreas de concentración para desarrollar activaciones de marca cercanas a su ubicación.</p>
+    <div class="geo-grid">
+      <div class="geo-card reveal reveal-delay-1">
+        <div class="pct">64%</div>
+        <div class="city">Madrid</div>
+        <div class="desc">Mayor concentración de usuarios. El código postal más activo es el 28011 con 2.048 usuarios.</div>
+      </div>
+      <div class="geo-card reveal reveal-delay-2">
+        <div class="pct">29%</div>
+        <div class="city">Barcelona</div>
+        <div class="desc">El CP 08013 lidera con 820 usuarios registrados. Fuerte presencia en el Eixample y zonas centrales.</div>
+      </div>
+      <div class="geo-card reveal reveal-delay-3">
+        <div class="pct">7%</div>
+        <div class="city">Otras ciudades</div>
+        <div class="desc">Activaciones en las principales ciudades de España han generado cobertura de códigos postales en todo el país.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAMILIA -->
+<section id="familia" class="parallax-section" style="min-height:auto;">
+<div class="parallax-shapes"><div class="pshape pshape-1" data-parallax-speed="0.08"></div><div class="pshape pshape-2" data-parallax-speed="-0.06"></div><div class="pshape pshape-3" data-parallax-speed="0.12"></div></div>
+  <div class="section-inner">
+    <div class="section-label reveal">Perfil demográfico</div>
+    <h2 class="section-title reveal reveal-delay-1">Familia e hijos</h2>
+
+    <div class="kpi-strip reveal reveal-delay-2">
+      <div class="kpi-chip"><div class="kpi-num">82%</div><div class="kpi-lbl">Nacionalidad española</div></div>
+      <div class="kpi-chip"><div class="kpi-num">74%</div><div class="kpi-lbl">Vive en familia</div></div>
+      <div class="kpi-chip highlight"><div class="kpi-num">26%</div><div class="kpi-lbl">Independientes</div></div>
+      <div class="kpi-chip"><div class="kpi-num">59%</div><div class="kpi-lbl">Tiene hijo(s)</div></div>
+      <div class="kpi-chip"><div class="kpi-num">21%</div><div class="kpi-lbl">Menor de 7 años</div></div>
+      <div class="kpi-chip"><div class="kpi-num">15%</div><div class="kpi-lbl">Entre 8 y 13 años</div></div>
+      <div class="kpi-chip"><div class="kpi-num">22%</div><div class="kpi-lbl">Mayor de 14 años</div></div>
+    </div>
+
+    <div class="charts-row reveal reveal-delay-3">
+      <div class="dark-chart-card">
+        <h3>Familia y convivencia</h3>
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">Pareja c/hijos</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="29%"></div></div><span class="bar-val" style="color:white">29%</span></div>
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">Pareja s/hijos</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="23%"></div></div><span class="bar-val" style="color:white">23%</span></div>
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">Solo/a</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="23%"></div></div><span class="bar-val" style="color:white">23%</span></div>
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">Con familiares</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="13%"></div></div><span class="bar-val" style="color:white">13%</span></div>
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">Solo c/hijos</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="8%"></div></div><span class="bar-val" style="color:white">8%</span></div>
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">Otros</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="4%"></div></div><span class="bar-val" style="color:white">4%</span></div>
+        </div>
+      </div>
+      <div class="dark-chart-card">
+        <h3>Número de hijos</h3>
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">Sin hijos</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="41%"></div></div><span class="bar-val" style="color:white">41%</span></div>
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">2 hijos</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="21%"></div></div><span class="bar-val" style="color:white">21%</span></div>
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">1 hijo</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="19%"></div></div><span class="bar-val" style="color:white">19%</span></div>
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">Esperando</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="5%"></div></div><span class="bar-val" style="color:white">5%</span></div>
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">3 hijos</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="7%"></div></div><span class="bar-val" style="color:white">7%</span></div>
+          <div class="bar-row"><span class="bar-label" style="color:rgba(255,255,255,.7)">4+ hijos</span><div class="bar-track"><div class="bar-fill" style="background:var(--green);" data-w="6%"></div></div><span class="bar-val" style="color:white">6%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OCUPACION -->
+<section id="ocupacion" class="parallax-section" style="min-height:auto;">
+<div class="parallax-shapes"><div class="pshape pshape-1" data-parallax-speed="0.07"></div><div class="pshape pshape-2" data-parallax-speed="-0.05"></div></div>
+  <div class="section-inner">
+    <div class="section-label reveal">Economía</div>
+    <h2 class="section-title reveal reveal-delay-1">Ocupación e ingreso</h2>
+
+    <div class="stats-grid reveal reveal-delay-2">
+      <div class="stat-card navy-card">
+        <div class="stat-num">56%</div>
+        <div class="stat-label">Están ocupados (trabajan)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--navy)">24%</div>
+        <div class="stat-label">Estudian</div>
+        <div class="stat-sub" style="color:#888; font-size:12px;">Universitarios y FP</div>
+      </div>
+      <div class="stat-card">
+        <div class="modal-pct">1.000–1.500€</div>
+        <div class="stat-label" style="margin-top:8px;">Salario modal mensual</div>
+        <div class="stat-sub" style="font-size:11px; color:#888;">El sueldo más frecuente entre nuestros usuarios</div>
+      </div>
+    </div>
+
+    <div class="uso-card reveal reveal-delay-3" style="margin-top:24px;">
+      <h3 style="font-family:'Poppins',sans-serif; font-size:18px; font-weight:700; margin-bottom:20px; color:var(--navy);">Ingreso mensual neto</h3>
+      <div class="ingreso-list">
+        <div class="ingreso-row"><span class="ingreso-label">1.000–1.500€</span><div class="ingreso-track"><div class="ingreso-fill" data-w="28%"></div></div><span class="ingreso-val">28%</span></div>
+        <div class="ingreso-row"><span class="ingreso-label">Menos de 500€</span><div class="ingreso-track"><div class="ingreso-fill" data-w="20%"></div></div><span class="ingreso-val">20%</span></div>
+        <div class="ingreso-row"><span class="ingreso-label">1.501–1.999€</span><div class="ingreso-track"><div class="ingreso-fill" data-w="15%"></div></div><span class="ingreso-val">15%</span></div>
+        <div class="ingreso-row"><span class="ingreso-label">501–999€</span><div class="ingreso-track"><div class="ingreso-fill" data-w="17%"></div></div><span class="ingreso-val">17%</span></div>
+        <div class="ingreso-row"><span class="ingreso-label">2.000–2.500€</span><div class="ingreso-track"><div class="ingreso-fill" data-w="10%"></div></div><span class="ingreso-val">10%</span></div>
+        <div class="ingreso-row"><span class="ingreso-label">2.501–2.999€</span><div class="ingreso-track"><div class="ingreso-fill" data-w="4%"></div></div><span class="ingreso-val">4%</span></div>
+        <div class="ingreso-row"><span class="ingreso-label">3.000–3.500€</span><div class="ingreso-track"><div class="ingreso-fill" data-w="3%"></div></div><span class="ingreso-val">3%</span></div>
+        <div class="ingreso-row"><span class="ingreso-label">Más de 3.501€</span><div class="ingreso-track"><div class="ingreso-fill" data-w="2%"></div></div><span class="ingreso-val">2%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios" class="parallax-section" style="min-height:auto;">
+<div class="parallax-shapes"><div class="pshape pshape-1" data-parallax-speed="0.08"></div>
+<div class="parallax-overlay" style="background:linear-gradient(150deg, rgba(14,27,48,0.9) 0%, rgba(28,62,110,0.8) 50%, rgba(14,27,48,0.95) 100%);"></div><div class="pshape pshape-2" data-parallax-speed="-0.06"></div><div class="pshape pshape-3" data-parallax-speed="0.12"></div></div>
+  <div class="section-inner">
+    <div class="section-label reveal">Consumo</div>
+    <h2 class="section-title reveal reveal-delay-1">Servicios</h2>
+    <p class="section-desc reveal reveal-delay-2">Las marcas y proveedores favoritos de nuestros usuarios en las categorías clave del consumo diario.</p>
+
+    <div class="servicios-grid">
+      <div class="servicio-card reveal reveal-delay-1">
+        <div class="servicio-heading"><div class="icon-wrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B0C8DF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><span>Supermercado habitual</span></div>
+        <div class="ranking-list">
+          <div class="ranking-item"><span class="rank-name">Carrefour</span><div class="rank-track"><div class="rank-fill" data-w="31%"></div></div><span class="rank-pct">31%</span></div>
+          <div class="ranking-item"><span class="rank-name">Alcampo</span><div class="rank-track"><div class="rank-fill" data-w="15%"></div></div><span class="rank-pct">15%</span></div>
+          <div class="ranking-item"><span class="rank-name">Mercadona</span><div class="rank-track"><div class="rank-fill" data-w="11%"></div></div><span class="rank-pct">11%</span></div>
+          <div class="ranking-item"><span class="rank-name">Ahorramás</span><div class="rank-track"><div class="rank-fill" data-w="10%"></div></div><span class="rank-pct">10%</span></div>
+          <div class="ranking-item"><span class="rank-name">Aldi</span><div class="rank-track"><div class="rank-fill" data-w="9%"></div></div><span class="rank-pct">9%</span></div>
+          <div class="ranking-item"><span class="rank-name">Lidl</span><div class="rank-track"><div class="rank-fill" data-w="5%"></div></div><span class="rank-pct">5%</span></div>
+        </div>
+      </div>
+      <div class="servicio-card reveal reveal-delay-2">
+        <div class="servicio-heading"><div class="icon-wrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B0C8DF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div><span>Telefonía móvil</span></div>
+        <div class="ranking-list">
+          <div class="ranking-item"><span class="rank-name">DIGI</span><div class="rank-track"><div class="rank-fill" data-w="15%"></div></div><span class="rank-pct">15%</span></div>
+          <div class="ranking-item"><span class="rank-name">Movistar</span><div class="rank-track"><div class="rank-fill" data-w="15%"></div></div><span class="rank-pct">15%</span></div>
+          <div class="ranking-item"><span class="rank-name">Otra</span><div class="rank-track"><div class="rank-fill" data-w="12%"></div></div><span class="rank-pct">12%</span></div>
+          <div class="ranking-item"><span class="rank-name">O2</span><div class="rank-track"><div class="rank-fill" data-w="9%"></div></div><span class="rank-pct">9%</span></div>
+          <div class="ranking-item"><span class="rank-name">Vodafone</span><div class="rank-track"><div class="rank-fill" data-w="8%"></div></div><span class="rank-pct">8%</span></div>
+          <div class="ranking-item"><span class="rank-name">Pepephone</span><div class="rank-track"><div class="rank-fill" data-w="7%"></div></div><span class="rank-pct">7%</span></div>
+        </div>
+      </div>
+      <div class="servicio-card reveal reveal-delay-3">
+        <div class="servicio-heading"><div class="icon-wrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B0C8DF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span>Pólizas de seguro</span></div>
+        <div class="ranking-list">
+          <div class="ranking-item"><span class="rank-name">Ninguno</span><div class="rank-track"><div class="rank-fill" data-w="22%"></div></div><span class="rank-pct">22%</span></div>
+          <div class="ranking-item"><span class="rank-name">Coche</span><div class="rank-track"><div class="rank-fill" data-w="19%"></div></div><span class="rank-pct">19%</span></div>
+          <div class="ranking-item"><span class="rank-name">Hogar</span><div class="rank-track"><div class="rank-fill" data-w="17%"></div></div><span class="rank-pct">17%</span></div>
+          <div class="ranking-item"><span class="rank-name">Otro</span><div class="rank-track"><div class="rank-fill" data-w="12%"></div></div><span class="rank-pct">12%</span></div>
+          <div class="ranking-item"><span class="rank-name">Viaje</span><div class="rank-track"><div class="rank-fill" data-w="6%"></div></div><span class="rank-pct">6%</span></div>
+        </div>
+      </div>
+      <div class="servicio-card reveal reveal-delay-4">
+        <div class="servicio-heading"><div class="icon-wrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B0C8DF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><span>Energía</span></div>
+        <div class="ranking-list">
+          <div class="ranking-item"><span class="rank-name">Naturgy</span><div class="rank-track"><div class="rank-fill" data-w="31%"></div></div><span class="rank-pct">31%</span></div>
+          <div class="ranking-item"><span class="rank-name">Iberdrola</span><div class="rank-track"><div class="rank-fill" data-w="25%"></div></div><span class="rank-pct">25%</span></div>
+          <div class="ranking-item"><span class="rank-name">Otra</span><div class="rank-track"><div class="rank-fill" data-w="16%"></div></div><span class="rank-pct">16%</span></div>
+          <div class="ranking-item"><span class="rank-name">Endesa</span><div class="rank-track"><div class="rank-fill" data-w="15%"></div></div><span class="rank-pct">15%</span></div>
+          <div class="ranking-item"><span class="rank-name">Octopus</span><div class="rank-track"><div class="rank-fill" data-w="4%"></div></div><span class="rank-pct">4%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMATICAS -->
+<section id="tematicas" class="parallax-section" style="min-height:auto;">
+<div class="parallax-shapes"><div class="pshape pshape-1" data-parallax-speed="0.08"></div><div class="pshape pshape-2" data-parallax-speed="-0.06"></div><div class="pshape pshape-3" data-parallax-speed="0.12"></div></div>
+  <div class="section-inner">
+    <div class="section-label reveal">Intereses</div>
+    <h2 class="section-title reveal reveal-delay-1">¿Qué temáticas les interesan?</h2>
+
+    <div class="topics-grid reveal reveal-delay-2">
+      <div class="topic-card" style="background:var(--navy); color:white;">
+        <div class="topic-icon"><div class="icon-wrap" style="background:rgba(255,255,255,.12)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19 2c-2-2-4-2-5.5-.5L10 5 1.8 6.2l5.6 5.6L1 15.6l2.8 2.8 3-6.4 5.6 5.6L7.2 22l3.2.8 3-4.4 4.4 4.4z"/></svg></div></div>
+        <div class="topic-pct" style="color:var(--red)">21%</div>
+        <div class="topic-name" style="opacity:.7">Viajes y turismo</div>
+      </div>
+      <div class="topic-card" style="background:var(--red); color:white;">
+        <div class="topic-icon"><div class="icon-wrap" style="background:rgba(255,255,255,.12)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg></div></div>
+        <div class="topic-pct">20%</div>
+        <div class="topic-name" style="opacity:.8">Entretenimiento</div>
+      </div>
+      <div class="topic-card" style="background:var(--off-white); border:2px solid var(--gray);">
+        <div class="topic-icon"><div class="icon-wrap" style="background:rgba(14,27,48,.08)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1A2F50" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.13z"/></svg></div></div>
+        <div class="topic-pct" style="color:var(--navy)">16%</div>
+        <div class="topic-name" style="color:#666">Moda / vestimenta</div>
+      </div>
+      <div class="topic-card" style="background:var(--green); color:white;">
+        <div class="topic-icon"><div class="icon-wrap" style="background:rgba(255,255,255,.15)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"/><path d="m15.89 8.11-2.39 2.39-1.5-1.5L9 12l-3 6h6l1.5-3 2.5 2.5L18 14l-3.11-5.89z"/></svg></div></div>
+        <div class="topic-pct">12%</div>
+        <div class="topic-name" style="opacity:.8">Deporte / Fitness</div>
+      </div>
+      <div class="topic-card" style="background:var(--off-white); border:2px solid var(--gray);">
+        <div class="topic-icon"><div class="icon-wrap" style="background:rgba(14,27,48,.08)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1A2F50" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div></div>
+        <div class="topic-pct" style="color:var(--navy)">10%</div>
+        <div class="topic-name" style="color:#666">Arte / diseño</div>
+      </div>
+      <div class="topic-card" style="background:var(--green-light); border:2px solid #C6E8DE;">
+        <div class="topic-icon"><div class="icon-wrap" style="background:rgba(29,122,95,.15)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1D7A5F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22 16 8"/><path d="M17.5 6.5c.5 3-1 5.5-3.5 7s-5.5 1-7-1.5S5.5 6 8 4.5s5.5-1 7 1.5c.5.83.5 1.83.5 1z"/></svg></div></div>
+        <div class="topic-pct" style="color:var(--green)">8%</div>
+        <div class="topic-name" style="color:#555">Sostenibilidad</div>
+      </div>
+      <div class="topic-card" style="background:var(--off-white); border:2px solid var(--gray);">
+        <div class="topic-icon"><div class="icon-wrap" style="background:rgba(14,27,48,.08)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1A2F50" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"/><path d="m16 16-4-4V8"/><path d="M6 16c0-2.667 1.333-4 4-4"/><path d="M18 16c0-2.667-1.333-4-4-4"/><path d="m6 20 4-4 4 4"/></svg></div></div>
+        <div class="topic-pct" style="color:var(--navy)">7%</div>
+        <div class="topic-name" style="color:#666">Yoga / Mindfulness</div>
+      </div>
+      <div class="topic-card" style="background:#E0E8F4; border:2px solid #C0D0E8;">
+        <div class="topic-icon"><div class="icon-wrap" style="background:rgba(28,62,110,.12)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1C3E6E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div></div>
+        <div class="topic-pct" style="color:var(--blue-deep)">6%</div>
+        <div class="topic-name" style="color:#555">Tecnología</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIETA -->
+<section id="dieta" class="parallax-section" style="min-height:auto; background:var(--white);">
+<div class="parallax-shapes"><div class="pshape pshape-1" data-parallax-speed="0.07"></div><div class="pshape pshape-2" data-parallax-speed="-0.05"></div></div>
+  <div class="section-inner">
+    <div class="section-label reveal">Hábitos</div>
+    <h2 class="section-title reveal reveal-delay-1">Tipo de dieta</h2>
+
+    <div class="dieta-grid reveal reveal-delay-2">
+      <div class="dieta-card" style="background:var(--navy); color:white; border-color:var(--navy);">
+        <div class="dieta-pct" style="color:var(--red)">59%</div>
+        <div class="dieta-name">Omnívoros</div>
+        <div class="dieta-desc" style="color:rgba(255,255,255,.6)">Carnes, pescados, lácteos, huevos y vegetales.</div>
+      </div>
+      <div class="dieta-card">
+        <div class="dieta-pct">14%</div>
+        <div class="dieta-name">Sin preferencia</div>
+        <div class="dieta-desc">Varían su dieta frecuentemente.</div>
+      </div>
+      <div class="dieta-card">
+        <div class="dieta-pct">12%</div>
+        <div class="dieta-name">Vegetarianos</div>
+        <div class="dieta-desc">Incluyen lácteos y/o huevos, no carne ni pescado.</div>
+      </div>
+      <div class="dieta-card" style="background:var(--green-light); border-color:#C6E8DE;">
+        <div class="dieta-pct" style="color:var(--green)">6%</div>
+        <div class="dieta-name" style="color:var(--green)">Veganos</div>
+        <div class="dieta-desc" style="color:#555">Excluyen todos los productos de origen animal.</div>
+      </div>
+      <div class="dieta-card" style="grid-column:1/3">
+        <div class="dieta-pct">4%</div>
+        <div class="dieta-name">Pescetarianos</div>
+        <div class="dieta-desc">Incluyen pescado, lácteos y/o huevos, pero no carne.</div>
+      </div>
+      <div class="dieta-card">
+        <div class="dieta-pct">3%</div>
+        <div class="dieta-name">Flexitarianos</div>
+        <div class="dieta-desc">Principalmente vegetarianos, pero ocasionalmente incluyen carne.</div>
+      </div>
+      <div class="dieta-card">
+        <div class="dieta-pct">3%</div>
+        <div class="dieta-name">Paleo / Keto</div>
+        <div class="dieta-desc">Priorizan grasas y proteínas, minimizan carbohidratos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MASCOTAS -->
+<section id="mascotas" class="parallax-section" style="min-height:auto;">
+<div class="parallax-shapes"><div class="pshape pshape-1" data-parallax-speed="0.07"></div><div class="pshape pshape-2" data-parallax-speed="-0.05"></div></div>
+  <div class="section-inner">
+    <div class="section-label reveal">Mascotas</div>
+    <h2 class="section-title reveal reveal-delay-1">Pet Lovers</h2>
+    <p class="section-desc reveal reveal-delay-2">Una comunidad que ama a sus animales y está dispuesta a invertir en su bienestar.</p>
+
+    <div class="mascotas-tabs reveal reveal-delay-3">
+      <button class="tab-btn active" onclick="switchTab('dogs')"><span style="display:inline-flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2 .336-3.5 2.185-3.5 4.5C3 9.5 4 11 5 12c.61.61 1.27 1.14 2 1.57"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2 .336 3.5 2.185 3.5 4.5 0 2-.999 3.5-2 4.5-.61.61-1.27 1.14-2 1.57"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75z"/><path d="M5 6.5c0 2.5 2 4.5 4.5 4.5h5c2.5 0 4.5-2 4.5-4.5"/><path d="M8.5 18.5c1 1 5 1 7 0"/><path d="M7 15c-1 1-1 2-1 3h12c0-1 0-2-1-3"/></svg> Dogs Lovers</span></button>
+      <button class="tab-btn" onclick="switchTab('cats')"><span style="display:inline-flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 14.5 20.58 16 19 17c-1.5 1-3.5 1.5-6 1.5h-2c-2.5 0-4.5-.5-6-1.5-1.58-1-2-2.5-2-3.56 0-1.2.43-2.37 1-3.44 0 0-1.82-6.42-.42-7 1.39-.58 4.64.26 6.42 2.26.65-.17 1.33-.26 2-.26z"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75z"/></svg> Cats Lovers</span></button>
+    </div>
+
+    <div id="tab-dogs" class="tab-content active">
+      <div class="mascota-hero">
+        <div>
+          <div class="mascota-icon"><div class="icon-wrap" style="width:80px;height:80px;background:rgba(207,50,87,.2);border:2px solid rgba(207,50,87,.4);border-radius:24px;"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#CF3257" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2 .336-3.5 2.185-3.5 4.5C3 9.5 4 11 5 12"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2 .336 3.5 2.185 3.5 4.5 0 2-.999 3.5-2 4.5"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75z"/><path d="M5 6.5c0 2.5 2 4.5 4.5 4.5h5c2.5 0 4.5-2 4.5-4.5"/><path d="M8.5 18.5c1 1 5 1 7 0"/><path d="M7 15c-1 1-1 2-1 3h12c0-1 0-2-1-3"/></svg></div></div>
+          <div class="mascota-num">301.982</div>
+          <div class="mascota-sub">usuarios tienen un perro</div>
+        </div>
+        <div>
+          <div class="mascota-stat"><strong>196.945</strong> <span>tienen más de uno</span></div>
+          <div class="mascota-stat" style="margin-top:12px;"><strong style="color:#B0C8DF">78%</strong> <span>de conversión en productos de mascotas</span></div>
+        </div>
+        <div style="font-size:13px; opacity:.65; line-height:1.7; margin-top:16px;">
+          Los segmentos de 26–35 y 46–55 son los que más tienen perro. La gran mayoría los tienen de tamaño mediano y de menos de 10 años.
+        </div>
+      </div>
+      <div class="mascota-details">
+        <div class="mascota-info-card">
+          <h4>Género</h4>
+          <div class="gender-row">
+            <div class="gender-chip fem"><div class="g-num">49%</div><div class="g-lbl">Femenino</div></div>
+            <div class="gender-chip masc"><div class="g-num">51%</div><div class="g-lbl">Masculino</div></div>
+          </div>
+        </div>
+        <div class="mascota-info-card">
+          <h4>Edad del perro</h4>
+          <div class="ingreso-list">
+            <div class="ingreso-row"><span class="ingreso-label">Menos de 10 años</span><div class="ingreso-track"><div class="ingreso-fill" data-w="49%"></div></div><span class="ingreso-val">49%</span></div>
+            <div class="ingreso-row"><span class="ingreso-label">Menos de 1 año</span><div class="ingreso-track"><div class="ingreso-fill" data-w="20%"></div></div><span class="ingreso-val">20%</span></div>
+            <div class="ingreso-row"><span class="ingreso-label">Más de 10 años</span><div class="ingreso-track"><div class="ingreso-fill" data-w="15%"></div></div><span class="ingreso-val">15%</span></div>
+          </div>
+        </div>
+        <div class="mascota-info-card">
+          <h4>Tamaño</h4>
+          <div class="ingreso-list">
+            <div class="ingreso-row"><span class="ingreso-label">Menos 10kg</span><div class="ingreso-track"><div class="ingreso-fill" data-w="49%"></div></div><span class="ingreso-val">49%</span></div>
+            <div class="ingreso-row"><span class="ingreso-label">Mini (5–10kg)</span><div class="ingreso-track"><div class="ingreso-fill" data-w="12%"></div></div><span class="ingreso-val">12%</span></div>
+            <div class="ingreso-row"><span class="ingreso-label">Grande (+10kg)</span><div class="ingreso-track"><div class="ingreso-fill" data-w="8%"></div></div><span class="ingreso-val">8%</span></div>
+            <div class="ingreso-row"><span class="ingreso-label">Toy (-5kg)</span><div class="ingreso-track"><div class="ingreso-fill" data-w="7%"></div></div><span class="ingreso-val">7%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-cats" class="tab-content">
+      <div class="mascota-hero">
+        <div>
+          <div class="mascota-icon"><div class="icon-wrap" style="width:80px;height:80px;background:rgba(176,200,223,.2);border:2px solid rgba(176,200,223,.4);border-radius:24px;"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#B0C8DF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 14.5 20.58 16 19 17c-1.5 1-3.5 1.5-6 1.5h-2c-2.5 0-4.5-.5-6-1.5-1.58-1-2-2.5-2-3.56 0-1.2.43-2.37 1-3.44 0 0-1.82-6.42-.42-7 1.39-.58 4.64.26 6.42 2.26.65-.17 1.33-.26 2-.26z"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75z"/></svg></div></div>
+          <div class="mascota-num">288.852</div>
+          <div class="mascota-sub">usuarios tienen un gato</div>
+        </div>
+        <div>
+          <div class="mascota-stat"><strong>196.945</strong> <span>tienen más de uno</span></div>
+          <div class="mascota-stat" style="margin-top:12px;"><strong style="color:#B0C8DF">68%</strong> <span>dispuestos a comprar las marcas probadas</span></div>
+        </div>
+        <div style="font-size:13px; opacity:.65; line-height:1.7; margin-top:16px;">
+          77% de sus gatos está esterilizado o en proceso de esterilización. 5% de nuestros usuarios conviven con un gato y un perro.
+        </div>
+      </div>
+      <div class="mascota-details">
+        <div class="mascota-info-card">
+          <h4>Género</h4>
+          <div class="gender-row">
+            <div class="gender-chip fem"><div class="g-num">60%</div><div class="g-lbl">Femenino</div></div>
+            <div class="gender-chip masc"><div class="g-num">40%</div><div class="g-lbl">Masculino</div></div>
+          </div>
+        </div>
+        <div class="mascota-info-card">
+          <h4>Edad del gato</h4>
+          <div class="ingreso-list">
+            <div class="ingreso-row"><span class="ingreso-label">Menos de 10 años</span><div class="ingreso-track"><div class="ingreso-fill" data-w="57%"></div></div><span class="ingreso-val">57%</span></div>
+            <div class="ingreso-row"><span class="ingreso-label">Menos de 1 año</span><div class="ingreso-track"><div class="ingreso-fill" data-w="21%"></div></div><span class="ingreso-val">21%</span></div>
+            <div class="ingreso-row"><span class="ingreso-label">Más de 10 años</span><div class="ingreso-track"><div class="ingreso-fill" data-w="18%"></div></div><span class="ingreso-val">18%</span></div>
+          </div>
+        </div>
+        <div class="mascota-info-card">
+          <h4>Rango de edad de los dueños</h4>
+          <div class="ingreso-list">
+            <div class="ingreso-row"><span class="ingreso-label">25–34</span><div class="ingreso-track"><div class="ingreso-fill" data-w="24%"></div></div><span class="ingreso-val">24%</span></div>
+            <div class="ingreso-row"><span class="ingreso-label">18–24</span><div class="ingreso-track"><div class="ingreso-fill" data-w="18%"></div></div><span class="ingreso-val">18%</span></div>
+            <div class="ingreso-row"><span class="ingreso-label">35–44</span><div class="ingreso-track"><div class="ingreso-fill" data-w="18%"></div></div><span class="ingreso-val">18%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USUARIAS -->
+<section id="usuarias" class="parallax-section" style="min-height:auto;">
+<div class="parallax-shapes"><div class="pshape pshape-1" data-parallax-speed="0.08"></div>
+<div class="parallax-overlay" style="background:linear-gradient(135deg, rgba(168,32,64,0.7) 0%, rgba(207,50,87,0.5) 50%, rgba(232,96,122,0.6) 100%);"></div><div class="pshape pshape-2" data-parallax-speed="-0.06"></div><div class="pshape pshape-3" data-parallax-speed="0.12"></div></div>
+  <div class="section-inner">
+    <div class="section-label reveal">Segmentos femeninos</div>
+    <h2 class="section-title reveal reveal-delay-1">Demográfico: Usuarias</h2>
+    <p class="section-desc reveal reveal-delay-2">El 43% de nuestros usuarios son mujeres y se dividen en tres grandes segmentos. Tienen en promedio 36 años y pertenecen a la generación X o Millennial.</p>
+
+    <div class="usuarias-grid">
+      <div class="usuaria-segment reveal reveal-delay-1">
+        <div class="seg-icon"><div class="icon-wrap"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><circle cx="12" cy="9" r="3"/></svg></div></div>
+        <div class="seg-name">Independientes</div>
+        <div class="seg-desc">Sin hijos. Jóvenes activas, orientadas a su carrera y ocio personal. Interesadas en viajes, moda y entretenimiento.</div>
+        <span class="seg-tag">Sin hijos</span>
+      </div>
+      <div class="usuaria-segment reveal reveal-delay-2">
+        <div class="seg-icon"><div class="icon-wrap"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div>
+        <div class="seg-name">Líderes en construcción</div>
+        <div class="seg-desc">Con uno o dos hijos. Motor de su familia. Equilibran trabajo, hogar e intereses propios. Compradoras activas y exigentes.</div>
+        <span class="seg-tag">1–2 hijos</span>
+      </div>
+      <div class="usuaria-segment reveal reveal-delay-3">
+        <div class="seg-icon"><div class="icon-wrap"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><circle cx="18" cy="5" r="2"/></svg></div></div>
+        <div class="seg-name">Maximizadoras SL</div>
+        <div class="seg-desc">Con tres o más hijos. Gestoras expertas del hogar. Buscan valor, calidad y practicidad. Influenciadoras en su entorno.</div>
+        <span class="seg-tag">3+ hijos</span>
+      </div>
+    </div>
+
+    <div class="phygital-card reveal reveal-delay-4" style="margin-top:28px; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25);">
+      <h3>¿Qué tienen en común?</h3>
+      <p>A todas les interesan los <strong>viajes</strong>, la <strong>moda</strong>, el <strong>fitness</strong> y el <strong>entretenimiento</strong>. Son el segmento con mayor capacidad de influencia en decisiones de compra del hogar.</p>
+    </div>
+
+    <div style="margin-top:32px; background:rgba(255,255,255,.1); border-radius:20px; padding:28px; border:1px solid rgba(255,255,255,.2);" class="reveal reveal-delay-4">
+      <h3 style="font-family:'Poppins',sans-serif; font-size:18px; font-weight:700; margin-bottom:16px;"><span style="display:inline-flex;align-items:center;gap:10px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"/><path d="M12 6c-1.5 0-4 1-4 5 0 2.5.5 4 1.5 5L12 18l2.5-2c1-1 1.5-2.5 1.5-5 0-4-2.5-5-4-5z"/><path d="M10 17v3"/><path d="M14 17v3"/></svg> Usuarias embarazadas</span></h3>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+        <div style="text-align:center;">
+          <div style="font-family:'Poppins',sans-serif; font-size:36px; font-weight:800;">7.762</div>
+          <div style="font-size:12px; opacity:.7; margin-top:4px;">Usuarias embarazadas</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'Poppins',sans-serif; font-size:36px; font-weight:800;">33 años</div>
+          <div style="font-size:12px; opacity:.7; margin-top:4px;">Edad promedio</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'Poppins',sans-serif; font-size:36px; font-weight:800;">68%</div>
+          <div style="font-size:12px; opacity:.7; margin-top:4px;">Trabajan o estudian</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">Samplia <span>Insights</span></div>
+  <div class="f-tag">Turning tryers into buyers</div>
+  <div class="f-line"></div>
+  <small>© 2025 Samplia · Colectivos España · Datos actualizados</small>
+</footer>
+
+<script>
+  // ─── NAV scroll effect ───
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // ─── REVEAL on scroll ───
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        // Animate bars when visible
+        e.target.querySelectorAll('.bar-fill, .channel-bar-fill, .ingreso-fill, .rank-fill').forEach(bar => {
+          const w = bar.getAttribute('data-w') || bar.style.getPropertyValue('--w');
+          if (bar.getAttribute('data-w')) {
+            setTimeout(() => { bar.style.width = bar.getAttribute('data-w'); }, 100);
+          }
+        });
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealEls.forEach(el => observer.observe(el));
+
+  // Also observe all bar fills directly
+  const allBars = document.querySelectorAll('.bar-fill, .channel-bar-fill, .ingreso-fill, .rank-fill');
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const w = e.target.getAttribute('data-w');
+        if (w) {
+          setTimeout(() => { e.target.style.width = w; }, 200);
+        }
+        barObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  allBars.forEach(b => barObserver.observe(b));
+
+  // ─── PARALLAX ENGINE ───
+  const parallaxHandler = () => {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+
+    // Hero elements
+    document.querySelectorAll('.hero-corner-tl').forEach(el => {
+      el.style.transform = `translateY(${scrollY * 0.3}px)`;
+    });
+    document.querySelectorAll('.hero-corner-br').forEach(el => {
+      el.style.transform = `translateY(${scrollY * -0.2}px)`;
+    });
+    document.querySelectorAll('.hero-badge').forEach(el => {
+      el.style.transform = `translateY(calc(-50% + ${scrollY * 0.15}px)) rotate(-8deg)`;
+    });
+    document.querySelectorAll('.hero-title').forEach(el => {
+      el.style.transform = `translateY(${scrollY * 0.08}px)`;
+    });
+    document.querySelectorAll('.hero-shape-1').forEach(el => {
+      el.style.transform = `translateY(${scrollY * 0.06}px)`;
+    });
+    document.querySelectorAll('.hero-shape-2').forEach(el => {
+      el.style.transform = `translateY(${scrollY * -0.09}px)`;
+    });
+
+    // Section-level parallax shapes
+    document.querySelectorAll('.pshape').forEach(el => {
+      const speed = parseFloat(el.getAttribute('data-parallax-speed') || '0');
+      const section = el.closest('section');
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const sectionCenter = rect.top + rect.height / 2 - vh / 2;
+      el.style.transform = `translateY(${sectionCenter * speed}px)`;
+    });
+
+    // Section title subtle drift per section
+    document.querySelectorAll('.parallax-section .section-title').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const offset = (rect.top - vh / 2) * 0.03;
+      el.style.transform = `translateY(${offset}px)`;
+    });
+  };
+
+  window.addEventListener('scroll', parallaxHandler, { passive: true });
+  parallaxHandler();
+
+
+  // ─── TAB SWITCH ───
+  function switchTab(name) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+    // Trigger bar animations for the newly shown tab
+    document.getElementById('tab-' + name).querySelectorAll('.ingreso-fill').forEach(bar => {
+      bar.style.width = '0';
+      setTimeout(() => { bar.style.width = bar.getAttribute('data-w') || '0%'; }, 50);
+    });
+  }
+
+  // ─── NAV active highlight ───
+  const sections = document.querySelectorAll('section[id]');
+  const navPills = document.querySelectorAll('.nav-pill');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navPills.forEach(p => p.classList.remove('active'));
+        const match = document.querySelector(`.nav-pill[href="#${e.target.id}"]`);
+        if (match) match.classList.add('active');
+      }
+    });
+  }, { rootMargin:'-40% 0px -40% 0px' });
+  sections.forEach(s => sectionObserver.observe(s));
+</script>
+</body>
+</html>
