@@ -574,6 +574,12 @@
       grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     }
 
+    /* Fila de «Canal» + «Frecuencia»: canal un 20% más ancho que el reparto
+       1:2 original y luego un 10% más (2:3 → 11:14), a costa de frecuencia. */
+    #compra .grid.g-auto {
+      grid-template-columns: minmax(0, 11fr) minmax(0, 14fr);
+    }
+
     @media (max-width: 1080px) {
 
       .g-3,
@@ -589,6 +595,10 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      #compra .grid.g-auto {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .span3,
       .span2 {
         grid-column: 1 / -1;
@@ -600,7 +610,8 @@
       .g-2,
       .g-3,
       .g-auto,
-      #consumo .grid.g-auto {
+      #consumo .grid.g-auto,
+      #compra .grid.g-auto {
         grid-template-columns: minmax(0, 1fr);
       }
 
@@ -825,7 +836,6 @@
       margin-top: 22px;
       padding: 2px 0 2px 20px;
       border-left: 2px solid var(--blue-200);
-      max-width: 88ch;
     }
 
     .read h4 {
@@ -1254,6 +1264,22 @@
       white-space: nowrap;
     }
 
+    /* «Canal de compra»: respuestas más largas que el resto de rankings,
+       se dejan envolver a dos líneas en vez de recortarse; el texto baja de
+       tamaño para que dos líneas no apiñen las filas entre sí. */
+    #b_compra_1_card .lb .n {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      font-size: 11.5px;
+      font-weight: 400;
+      line-height: 1.25;
+    }
+
     /* carril + relleno */
     .lb .t {
       height: 7px;
@@ -1411,6 +1437,19 @@
       font-size: 11.5px;
       font-weight: 600;
       color: var(--text-4);
+    }
+
+    /* «Intención de invertir en formación»: respuestas largas, sin truncar;
+       se envuelven enteras y las filas se separan más para no apiñarse. */
+    #b_economia_1_card .lb--pro {
+      gap: 10px;
+    }
+
+    #b_economia_1_card .lb--pro .n {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+      line-height: 1.3;
     }
 
     /* El líder: filete de acento y relleno en rosa de marca. */
@@ -1645,7 +1684,7 @@
 
       <header class="open" id="apertura">
         <div class="open-kicker"></div>
-        <h1>Conoce a nuestra <em>comunidad de usuarios</em>.</h1>
+        <h1>Conoce a nuestra <em>comunidad de usuarios.</em></h1>
         <p>Cada usuario de nuestra app es distinto, pero su participación, gustos, ubicación y
           opiniones nos permiten segmentarlos en grandes colectivos.</p>
         <p class="q-big">Demográficos</p>
@@ -1823,7 +1862,7 @@
        frecuencia). `topN` recorta la cola larga agrupando el resto. */
     const CHAPTERS = [
       {
-        id: 'quienes', n: '01', title: 'Quiénes somos',
+        id: 'quienes', n: '01', title: 'Cuántos somos',
         q: '¿Qué aspecto tiene nuestra comunidad?',
         blocks: [
           /* La rejilla es de 3 columnas en escritorio y se rellena por filas.
@@ -1924,8 +1963,10 @@
         q: '¿Dónde, cómo y cada cuánto se llena la cesta?',
         lede: 'Enseña, canal y frecuencia describen el acto de compra: en qué cadena se gasta, por qué vía se pide y con qué ritmo se repone. Es la parte del recorrido que se puede activar con una promoción.',
         blocks: [
-          /* supermercado (1) + canal (2) cierran la primera fila y frecuencia
-             ocupa la segunda entera: así no queda ningún hueco en la rejilla. */
+          /* supermercado cierra la primera fila entera; canal y frecuencia
+             se reparten la segunda 11:14 (`#compra .grid.g-auto`) — canal un
+             20% y luego un 10% más ancho que el 1:2 original — así no queda
+             hueco. */
           {
             kind: 'treemap', src: 'supermercado', title: 'Supermercado habitual',
             sub: 'El área de cada bloque es proporcional al porcentaje',
@@ -1936,7 +1977,7 @@
           },
           {
             kind: 'hbar', src: 'frecuencia', title: 'Frecuencia de compra de alimentos',
-            order: SCALES.frecuencia, noValueAxis: true, wrap: 32, span: 2,
+            order: SCALES.frecuencia, noValueAxis: true, wrap: 32,
           },
         ]
       },
@@ -3704,11 +3745,11 @@
           // el bloque entero se centra en el hueco, no sólo la primera línea
           const gap = small * 1.28;
           let y0 = y - (big + 4 + lines.length * gap) / 2 + big / 2;
-          c.fillStyle = '#0F1729';
+          c.fillStyle = '#E0253F';           // --red: rojo Samplia
           c.font = `800 ${big}px ${FAM}`;
           c.fillText(txt, x, y0);
           y0 += big / 2 + 4 + gap / 2;
-          c.fillStyle = '#6B7280';
+          c.fillStyle = '#E0253F';           // --red: rojo Samplia
           c.font = `600 ${small}px ${FAM}`;
           lines.forEach(l => { c.fillText(l, x, y0); y0 += gap; });
           c.restore();
@@ -4459,17 +4500,18 @@
       if (a) items.push({ v: a.mean.toFixed(1).replace('.', ','), u: ' años', l: 'Edad media' });
       if (g && g.declared) items.push({
         v: pct(g.by.F || 0, g.declared).toFixed(1).replace('.', ','), u: '%',
-        l: 'Mujeres sobre quienes declaran sexo'
+        l: 'Mujeres'
       });
       const cv = blockStats('conversion', {});
       if (cv && cv.rows.length) {
-        /* Fila concreta y no «cualquier sí»: aquí interesa aislar a quien
-           repite, no a quien sólo probó una vez, así que el filtro exige
-           «más de una vez» y no basta con que empiece por «sí». */
-        const si = cv.rows.find(r => /^s[ií].*más de una vez/i.test(norm(r.label))) || cv.rows[0];
+        /* Mismo criterio que el centro del donut «Han comprado un producto
+           tras probarlo»: toda respuesta que empieza por «sí», sumada, sin
+           aislar a quien repite. */
+        const si = cv.rows.filter(r => /^s[ií]/i.test(norm(r.label)));
+        const sum = si.reduce((a, r) => a + r.value, 0);
         items.push({
-          v: pct(si.value, cv.base).toFixed(1).replace('.', ','), u: '%',
-          l: 'Han comprado más de una vez (luego probarlo en Samplia)'
+          v: pct(sum, cv.base).toFixed(0), u: '%',
+          l: 'Han comprado tras probar'
         });
       }
       document.getElementById('kpis').innerHTML = items.length
