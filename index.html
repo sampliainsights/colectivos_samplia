@@ -816,6 +816,65 @@
       height: 420px;
     }
 
+    /* ═══ DIVISIÓN LATERAL DE ESCALA (gutter) ═══════════════════════════
+       Tira de color a la izquierda del eje de categorías, ver comentario
+       junto a `bl.gutter`. `.cv` deja de ser hijo directo de `.card` —pasa
+       a serlo de `.cv-row`— así que repite aquí el flex-grow y el margen
+       que le daban `.card>.cv` y `.cv` para que la altura de la tarjeta no
+       cambie por llevar gutter. */
+    .cv-row {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+      flex: 1 1 auto;
+      min-height: 200px;
+      margin-top: 16px;
+    }
+
+    .cv-row>.cv {
+      flex: 1 1 auto;
+      margin-top: 0;
+      min-width: 0;
+    }
+
+    .gutter {
+      flex: 0 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Filete de color, no bloque relleno: la marca de banda es el mismo
+       lenguaje que el resto de la tarjeta (un filete de 1-3px), no una
+       píldora sólida compitiendo con las barras. */
+    .gutter-seg {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding-right: 9px;
+    }
+
+    .gutter-seg::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 3px;
+      border-radius: 2px;
+      background: var(--gc, transparent);
+    }
+
+    .gutter-seg span {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
     /* ═══ TARJETA CON DOS SUB-BLOQUES ══════════════════════════════════ */
     .duo-h {
       margin-top: 18px;
@@ -1990,7 +2049,6 @@
         'No realizo la compra de alimentos, lo hace otra persona',
       ],
       ingresos: [
-        'No tengo ingresos',                  // abre: es la ausencia de ingreso, no un tramo
         'Menos de 500€ al mes',
         'Entre 501 y 999€ al mes',
         'Entre 1000 y 1500€ al mes',
@@ -1999,6 +2057,7 @@
         'Entre 2501 y 2999€ al mes',
         'Entre 3000€ y 3500€ al mes',
         'Más de 3501€ al mes',
+        'No tengo ingresos',                  // cierra: es la ausencia de ingreso, no un tramo
       ],
       experiencia: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
     };
@@ -2029,6 +2088,20 @@
       { l: 'Muy satisfechos', r: '9–10', lo: 9, hi: 10, c: '#0F1729' },
     ];
 
+    /* Bandas de la escala de ingresos, para el gutter que agrupa los tramos
+       a la izquierda del eje. Sólo cubre los ocho tramos monetarios —igual
+       que `grey` los separa de «No tengo ingresos» por color de barra, aquí
+       el último segmento (n:1, sin `l` ni `c`) le deja su fila sin banda: no
+       es un tramo de la escala, es el extremo que se sale de ella. `n` es el
+       número de categorías que cubre el segmento, no su valor: el gutter es
+       estructural y reparte el alto igual que las filas de Chart.js. */
+    const INCOME_GUTTER = [
+      { l: 'Bajo', c: '#B3BED7', n: 2 },
+      { l: 'Mid', c: '#5B72A8', n: 3 },
+      { l: 'Alto', c: '#23355F', n: 3 },
+      { n: 1 },
+    ];
+
     /* ── Estructura narrativa ─────────────────────────────────────────
        Un bloque por gráfico. `kind`: age | gender | cpmap | split | donut
        | vbar | hbar | auto. `strip`: expresión que se quita de todas las
@@ -2053,7 +2126,10 @@
              columna estrecha, junto a la franja de edad (span 2). El treemap
              ocupa la fila siguiente completa, así que no queda ningún hueco. */
           { kind: 'age', src: 'edad', title: 'Distribución por franja de edad', span: 2 },
-          { kind: 'gendernat', src: 'genero', title: 'Sexo y nacionalidad' },
+          {
+            kind: 'gendernat', src: 'genero', title: 'Sexo y nacionalidad',
+            edit: [[/^Otra$/i, 'Otra residentes en España']],
+          },
           {
             kind: 'treemap', src: 'ocupacion', title: 'Situación laboral', span: 3, topN: 12,
             sub: 'El área de cada bloque es proporcional al porcentaje. Al filtrar por sexo, cada bloque indica además su desviación en puntos frente al total',
@@ -2174,13 +2250,15 @@
         lede: 'El ingreso declarado, leído junto a la ocupación y la vivienda, permite agrupar la comunidad en grandes bandas de capacidad de consumo — sin pretender precisión individual.',
         blocks: [
           {
-            kind: 'hbar', src: 'ingresos', title: 'Ingreso mensual neto del hogar',
+            kind: 'hbar', src: 'ingresos', title: 'Ingreso mensual neto del usuario',
             sub: 'Al filtrar por sexo, la base y los porcentajes se recalculan sobre la serie elegida',
             order: SCALES.ingresos, noValueAxis: true, span: 2, filter: 'genero',
+            gutter: INCOME_GUTTER,
             /* «No tengo ingresos» no es un tramo de la escala, es el extremo
                que se sale de ella: dejarlo en la rampa azul lo pondría a
                competir por lectura con los tramos que sí miden dinero. */
             grey: /^no tengo ingresos/i,
+            edit: [[/\s*al mes$/i, '']],
           },
           {
             kind: 'board', src: 'formacion', title: 'Intención de invertir en formación',
@@ -3305,7 +3383,8 @@
        por su propio camino (genderStats), donde el no declarado ya se excluye
        del porcentaje pero sigue contando para el tamaño de la comunidad. */
     const HIDDEN_ANSWER = /^prefiero no contestar/i;
-    const colorAt = (i, label) => NEUTRAL_RE.test(label || '') ? '#D7DAE1' : RAMP[i % RAMP.length];
+    const colorAt = (i, label) => /^otra residentes en espa/i.test(label || '')
+      ? '#23355F' : NEUTRAL_RE.test(label || '') ? '#D7DAE1' : RAMP[i % RAMP.length];
     const colorAtBlue = (i, label) => NEUTRAL_RE.test(label || '') ? '#D7DAE1' : BLUE_RAMP[i % BLUE_RAMP.length];
 
     /* Color de una categoría: `bands` pinta por tramo de la escala y manda
@@ -3632,6 +3711,21 @@
             : `<h3>${bl.title}</h3>`;
           const key = (bl.bands && !bl.noKey) ? `<div class="bandkey" id="${id}_key"></div>` : '';
           const bsum = bl.bands ? `<div class="bandsum" id="${id}_bsum"></div>` : '';
+          const canvas = `<div class="cv ${bl.kind === 'agecurve' ? 'cv-260' : bl.span >= 2 ? 'cv-420' : 'cv-300'}"${bl.tall ? ` style="height:${bl.tall}px"` : ''}>
+                   <canvas id="${id}"></canvas></div>`;
+          /* `gutter`: filete de color a la izquierda del eje de categorías
+             que agrupa los tramos en bandas de magnitud (p.ej. Bajo/Mid/
+             Alto en ingresos). Es estructural, no depende del dato: el
+             alto de cada segmento es proporcional al número de filas que
+             cubre (`n`), no a su valor, así que encaja con las filas
+             iguales que reparte la escala de categorías de Chart.js. Un
+             segmento sin `l` queda vacío —sirve para dejar sin banda una
+             fila que no pertenece a la escala, como «No tengo ingresos». */
+          const gutter = bl.gutter
+            ? `<div class="cv-row"><div class="gutter">${bl.gutter.map(g =>
+              `<div class="gutter-seg" style="flex:${g.n} 1 0${g.c ? `;--gc:${g.c}` : ''}">${g.l ? `<span>${esc(g.l)}</span>` : ''}</div>`
+            ).join('')}</div>${canvas}</div>`
+            : canvas;
           const body = (bl.kind === 'cpmap')
             ? `<div id="${id}_host" style="margin-top:14px"></div>`
             : (bl.kind === 'split' || bl.kind === 'treemap' || bl.kind === 'board')
@@ -3643,8 +3737,7 @@
                    <div class="duo-h">Nacionalidad</div>
                    <div class="base" id="${id}_nat_base"></div>
                    <div id="${id}_nat_host"></div>`
-                : `${ctl}${key}<div class="cv ${bl.kind === 'agecurve' ? 'cv-260' : bl.span >= 2 ? 'cv-420' : 'cv-300'}"${bl.tall ? ` style="height:${bl.tall}px"` : ''}>
-                   <canvas id="${id}"></canvas></div>${bsum}`;
+                : `${ctl}${key}${gutter}${bsum}`;
           /* `--d` es la posición en la cascada, no el índice del bloque:
              se reinicia cada tres tarjetas. Un capítulo con nueve
              bloques haría esperar 560 ms a la última, y para entonces
