@@ -517,6 +517,170 @@
       line-height: 1.35 !important;
     }
 
+    /* ═══ CTA DE CIERRE ═══════════════════════════════════════════════
+       Última palabra del informe: no es una tarjeta más de un capítulo,
+       así que vive fuera de la rejilla, entre `#caps` y el `<footer>` de
+       notas metodológicas. Sigue las mismas reglas que el resto del
+       informe en vez de inventar un registro nuevo —filete y no sombra;
+       superficie clara, que el rail es la única superficie oscura del
+       informe (ver su comentario)— y reutiliza el mismo degradado de
+       palabra clave (`.key`, ver «PALABRA CLAVE» arriba) del titular de
+       portada, para que apertura y cierre lean como la misma voz. */
+    .cta-close {
+      position: relative;
+      overflow: hidden;
+      margin-top: clamp(64px, 8vw, 104px);
+      padding: clamp(40px, 6vw, 72px) clamp(24px, 5vw, 56px);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      background: var(--surface);
+      text-align: center;
+    }
+
+    /* Marca de agua: la marquesina que recorre el fondo del `Cta69` de
+       referencia, con la marca en vez de una frase —es el cierre del
+       informe, la firma pesa más que un eslogan—. Dos copias idénticas
+       del mismo texto desplazadas por su propio ancho: al llegar la
+       primera a la mitad del recorrido, la segunda ocupa exactamente el
+       hueco que deja, así que el bucle no se nota. `.cta-close-content`
+       no lleva `z-index`: le basta ir después en el DOM, con su propio
+       `position: relative`, para pintarse encima de esta capa —evita el
+       lío de un `z-index` negativo escapándose del contexto de apilado
+       (visto y corregido ya una vez en `.bar-glow`, más abajo). */
+    .cta-close-marquee {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .cta-close-marquee-track {
+      display: flex;
+      width: max-content;
+      animation: cta-close-scroll 70s linear infinite;
+    }
+
+    .cta-close-marquee-track span {
+      font-size: 13vw;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -.04em;
+      white-space: nowrap;
+      color: var(--ink);
+      opacity: .025;
+    }
+
+    @keyframes cta-close-scroll {
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .cta-close-content {
+      position: relative;
+    }
+
+    .cta-close-h {
+      margin: 0 auto;
+      max-width: 38ch;
+      font-size: clamp(24px, 2.8vw, 38px);
+      font-weight: 800;
+      line-height: 1.14;
+      letter-spacing: -.03em;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+
+    /* Botón «shiny»: mismo mecanismo de borde que el botón de referencia,
+       con la rampa roja de marca en vez del teal original (el barrido
+       rápido sobre el propio botón, el `::after` del original, se probó
+       y se quitó: sólo se queda el filo).
+       Relleno: dos capas de fondo. La de encima (`--red`→`--brick`) se
+       recorta en `padding-box` —no cubre el borde—; la de debajo, un
+       degradado diagonal claro, se recorta en `border-box` —cubre borde
+       y relleno—. Con `border: 3px solid transparent` el borde queda
+       hueco de la primera capa, así que ahí sólo se ve la segunda, y
+       animar su `background-position` (`cta-close-border-glint`) es lo
+       que hace correr la luz por el filo, despacio y con la misma
+       curva de tres tramos del original (rápido, freno, reposo). */
+    .cta-close-btn {
+      position: relative;
+      margin-top: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 28px;
+      border: 3px solid transparent;
+      border-radius: 999px;
+      color: var(--n-0);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      text-decoration: none;
+      text-shadow: 0 0 4px rgba(255, 255, 255, .15);
+      background-color: var(--red);
+      background-image:
+        linear-gradient(to bottom right, var(--red), var(--brick)),
+        linear-gradient(125deg, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, .6) 50%, rgba(255, 255, 255, 0) 53%);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      background-size: 100%, 200%;
+      background-position: 0px, -250px;
+      animation: cta-close-border-glint 4s linear infinite;
+      transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+    }
+
+    @keyframes cta-close-border-glint {
+      0% {
+        background-position: 0px, -250px;
+      }
+
+      25% {
+        background-position: 0px, -200px;
+      }
+
+      75% {
+        background-position: 0px, 50px;
+      }
+
+      100% {
+        background-position: 0px, 50px;
+      }
+    }
+
+    /* `--sh-pop`: la sombra reservada a lo que flota de verdad (ver el
+       principio del sistema, arriba del todo) — el botón levantándose al
+       pasar el ratón es justo ese caso, no una excepción a la regla. */
+    .cta-close-btn:hover {
+      box-shadow: var(--sh-pop);
+      transform: translateY(-2px);
+    }
+
+    .cta-close-arrow {
+      transition: transform var(--dur-fast) var(--ease);
+    }
+
+    .cta-close-btn:hover .cta-close-arrow {
+      transform: translateX(3px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .cta-close-marquee-track,
+      .cta-close-btn {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .cta-close-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
     /* ═══ TIRA DE KPI ══════════════════════════════════════════════════
        Sin cajas: separadores de 1px y mucho aire. El primero es el que
        abre, y es el único que lleva el número en acento. */
@@ -773,6 +937,14 @@
       gap: 12px;
     }
 
+    .card-hd .chips {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
     .card .sub {
       margin-top: 7px;
       font-size: 12.5px;
@@ -823,6 +995,7 @@
        que le daban `.card>.cv` y `.cv` para que la altura de la tarjeta no
        cambie por llevar gutter. */
     .cv-row {
+      position: relative;
       display: flex;
       align-items: stretch;
       gap: 8px;
@@ -925,6 +1098,77 @@
       color: var(--ink);
     }
 
+    /* Ángulo registrado aparte (no como variable suelta) porque sólo así el
+       navegador interpola el giro del cono; sin `@property`, animar un
+       custom property dentro de un `conic-gradient` no transiciona, salta. */
+    @property --a {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 0deg;
+    }
+
+    /* `glow`: la píldora que quiere robar el primer vistazo (el «Top 2
+       box», al lado de la puntuación media) imita el neón azul de un
+       cuadro de entrada de IA — fondo casi negro y un filo que no está
+       quieto, sino que da la vuelta al borde como una luz que recorre el
+       perímetro, con un halo borroso detrás que es lo que de verdad se lee
+       como «brillo» en movimiento.
+       El anillo usa el truco del `border` en degradado —relleno sólido en
+       el "padding-box", cono de color en el "border-box"— y no una máscara:
+       con `mask-composite` la esquina redondeada de una píldora (radio 999px)
+       se recorta mal en varios motores y el cono se ve relleno en vez de
+       en anillo; con `border` real el navegador redondea las dos capas
+       igual y el anillo sigue el borde con precisión. */
+    .scorechip.glow {
+      position: relative;
+      background: #0B1220;
+      border-color: transparent;
+      color: #BFDBFE;
+    }
+
+    .scorechip.glow b {
+      color: #fff;
+    }
+
+    .scorechip.glow::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      z-index: -1;
+      border: 2px solid transparent;
+      border-radius: inherit;
+      background:
+        linear-gradient(#0B1220, #0B1220) padding-box,
+        conic-gradient(from var(--a), transparent 0deg, #93C5FD 30deg, #3B82F6 70deg, transparent 130deg, transparent 360deg) border-box;
+      animation: chip-spin 2.6s linear infinite;
+    }
+
+    /* Halo difuso detrás, mismo cono y mismo giro pero sin recortar a
+       anillo y con desenfoque: sin él el filo nítido de arriba lee como un
+       borde animado cualquiera, no como neón. */
+    .scorechip.glow::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      z-index: -2;
+      border-radius: inherit;
+      background: conic-gradient(from var(--a), transparent 0deg, rgba(59, 130, 246, .8) 30deg, rgba(59, 130, 246, .4) 70deg, transparent 130deg, transparent 360deg);
+      filter: blur(8px);
+      animation: chip-spin 2.6s linear infinite;
+    }
+
+    @keyframes chip-spin {
+      to {
+        --a: 360deg;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .scorechip.glow::before, .scorechip.glow::after {
+        animation: none;
+      }
+    }
+
     .bandkey {
       display: flex;
       flex-wrap: wrap;
@@ -986,6 +1230,28 @@
       font-weight: 800;
       color: var(--ink);
       letter-spacing: -.015em;
+    }
+
+    /* `float`: variante de `.bandsum` para el gutter de ingresos — en vez de
+       cerrar la tarjeta como una fila de leyenda a todo el ancho, las
+       píldoras se posan en la esquina inferior derecha del propio gráfico,
+       que es donde el bloque tiene hueco libre (las barras arrancan del
+       eje, a la izquierda). No lleva línea superior porque no cierra nada,
+       flota sobre el lienzo. */
+    .bandsum.float {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 0;
+      border-top: none;
+      justify-content: flex-end;
+      max-width: 100%;
+      pointer-events: none;
+    }
+
+    .bandsum.float span {
+      pointer-events: auto;
     }
 
     /* ═══ LECTURA / INSIGHT ════════════════════════════════════════════
@@ -1933,6 +2199,24 @@
 
       <div id="caps"></div>
 
+      <section class="cta-close" data-reveal>
+        <div class="cta-close-marquee" aria-hidden="true">
+          <div class="cta-close-marquee-track">
+            <span>SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;</span>
+            <span>SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;SAMPLIA&nbsp;·&nbsp;</span>
+          </div>
+        </div>
+        <div class="cta-close-content">
+          <h2 class="cta-close-h"><span class="key">Conócenos más</span> y diseñemos juntos el mejor segmento de usuarios <span class="key">para</span> <span class="key">activar tu marca</span></h2>
+          <a class="cta-close-btn" href="https://contacto.samplia.com/formulario" target="_blank" rel="noopener noreferrer">
+            Activar mi marca
+            <svg class="cta-close-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3.5 8h9M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </div>
+      </section>
+
       <footer>
         <h5>Fuentes y notas metodológicas</h5>
         <ul id="notas">
@@ -1979,7 +2263,7 @@
       { id: 'edad', label: 'Edad', key: K1, gid: '1019582858' },
       { id: 'genero', label: 'Género', key: K1, gid: '603143027' },
       { id: 'nacionalidad', label: 'Nacionalidad', key: K2, gid: '30276827' },
-      { id: 'cp', label: 'Código postal', key: K2, gid: '1864457995' },
+      { id: 'cp', label: 'Código postal', key: K1, gid: '505003100' },
       /* Mismo `fold` que ingresos y dieta y por la misma razón: «No binario»
          queda por debajo del mínimo del control y sin fundir con «No
          disponible» desaparecería y dejaría a «No disponible» rotulado «Sin
@@ -2017,7 +2301,7 @@
       { id: 'seguros', label: 'Seguros', key: K2, gid: '234772555' },
       { id: 'energia', label: 'Energía', key: K2, gid: '1710716330' },
       { id: 'movil', label: 'Móvil', key: K2, gid: '1895103324' },
-      { id: 'apps', label: 'Apps utilizadas', key: K2, gid: '1006194294' },
+      { id: 'apps', label: 'Apps de cashback / descuentos utilizadas', key: K2, gid: '1006194294' },
       { id: 'ia', label: 'Herramientas de IA', key: K2, gid: '2133588386' },
       { id: 'uso', label: 'Uso de Samplia', key: K2, gid: '295468045' },
       { id: 'experiencia', label: 'Experiencia con la app', key: K2, gid: '1494752762' },
@@ -2078,14 +2362,18 @@
        colores: la nota suelta casi no se interpreta —¿un 7 es bueno?— y
        agrupada sí, así que el color hace de lectura y las píldoras del pie
        dan el reparto que la barra a barra obliga a sumar de cabeza.
-       Los colores son los canónicos: ladrillo para el rechazo, gris para el
-       tramo que no se moja, azul de marca para el favorable y tinta para el
-       entusiasta, de modo que el degradado de intensidad acompaña a la nota. */
+       El rechazo va en gris claro —el mismo `--n-300` que usan las categorías
+       neutras del resto de gráficos— en vez de un color de alarma: no compite
+       por lectura con los dos tramos favorables, que son los que tienen que
+       destacar. Esos dos se quedan dentro de la misma familia de azules de
+       marca —`--blue-500` para «Satisfechos», `--blue-900` (el más oscuro
+       de la rampa, no negro/tinta) para «Muy satisfechos»— así que la nota
+       más alta lee como «más azul, más intensa», nunca como una alarma. */
     const SAT_BANDS = [
-      { l: 'No satisfechos', r: '1–4', lo: 1, hi: 4, c: '#B51A03' },
+      { l: 'No satisfechos', r: '1–4', lo: 1, hi: 4, c: '#D7DAE1' },
       { l: 'Neutrales', r: '5–6', lo: 5, hi: 6, c: '#5B6471' },
       { l: 'Satisfechos', r: '7–8', lo: 7, hi: 8, c: '#375395' },
-      { l: 'Muy satisfechos', r: '9–10', lo: 9, hi: 10, c: '#0F1729' },
+      { l: 'Muy satisfechos', r: '9–10', lo: 9, hi: 10, c: '#23355F' },
     ];
 
     /* Bandas de la escala de ingresos, para el gutter que agrupa los tramos
@@ -2319,7 +2607,7 @@
              fuera de la escala de color, que es lo que dice que no es una app
              sino un agregado. */
           {
-            kind: 'hbar', src: 'apps', title: 'Apps utilizadas', topN: 12,
+            kind: 'hbar', src: 'apps', title: 'Apps de cashback / descuentos utilizadas', topN: 12,
             noValueAxis: true, axisFont: 10, wrap: 16, tall: 462,
             bar: '#375395', grad: true,
             grey: /^ninguna de las anteriores/i,   // no matcha NEUTRAL_RE («ninguno», no «ninguna»)
@@ -2385,9 +2673,8 @@
              muestras». */
           {
             kind: 'vbar', src: 'experiencia', title: 'Valoración de la experiencia',
-            sub: 'Nota de 1 a 10; el color agrupa la escala en cuatro tramos y las píldoras del pie dan el reparto',
             order: SCALES.experiencia, pill: true, bands: SAT_BANDS, span: 2, tall: 340,
-            noValueAxis: true, noKey: true,
+            noValueAxis: true, noKey: true, topBox: 'Top 2 box', glow: ['9', '10'],
           },
           /* Segunda fila: el ranking de descubrimiento a una columna y el
              cierre de conversión a dos. El donut era una barra apilada a ancho
@@ -3296,9 +3583,13 @@
       return { rows, all: d, sum, base, multi, pctMode, rest, nCats: d.length };
     }
 
-    /* Normaliza y valida un código postal español.
-       Devuelve {cp, code, repaired} o {bad: motivo}. */
+    /* Normaliza y valida un código postal español, o directamente el slug de
+       provincia cuando la hoja ya llega agregada por provincia (columna
+       `state` con valores tipo `las_palmas`). Devuelve {cp, code, repaired}
+       o {bad: motivo}. */
     function cleanCp(raw) {
+      const slug = key(raw);
+      if (SLUG2CODE[slug]) return { cp: null, code: SLUG2CODE[slug], repaired: false };
       let t = norm(raw);
       t = t.replace(/[.,]0+$/, '');            // notación flotante de BigQuery: 28001.0
       t = t.replace(/[^0-9]/g, '');            // guiones, espacios, texto
@@ -3416,6 +3707,20 @@
         const v = parseInt(c.slice(i, i + 2), 16);
         return Math.round(v + (to - v) * k).toString(16).padStart(2, '0');
       }).join('');
+    };
+
+    /* Color de texto de una píldora a partir del color de banda: tonos
+       claros como el «Bajo» del gutter de ingresos (#B3BED7) o el «No
+       satisfechos» de la escala de valoración (#D7DAE1) salen ilegibles si
+       el texto lleva su propio tono sobre un fondo casi blanco. Se oscurece
+       sólo cuando la luminancia lo pide, así las bandas ya oscuras de por sí
+       no cambian. El icono de la píldora sigue con el color real de la
+       banda; sólo el texto pasa por aquí. */
+    const pillInk = hex => {
+      const c = hex.replace('#', '');
+      const [r, g, b] = [0, 2, 4].map(i => parseInt(c.slice(i, i + 2), 16));
+      const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      return lum > 0.55 ? shade(hex, -0.45) : hex;
     };
 
     /* Relleno en degradado para las barras (`grad` del bloque). El color base
@@ -3678,6 +3983,51 @@
       els.forEach(el => { el.classList.add('rv'); revealIo.observe(el); });
     }
 
+    /* Cuenta desde 0 hasta el valor final de un KPI de apertura, con el
+       mismo `ease-out` cúbico y el mismo truco de `requestAnimationFrame`
+       que `donutCenter` —perfilado en `--d1`, no en dígitos sueltos, para
+       no reformatear miles de veces por segundo. `kind` dice qué formato
+       de vuelta usar porque el número que llega a `dataset.target` es
+       siempre crudo, sin separador de miles ni coma decimal. */
+    const KPI_FMT = {
+      n: v => nf(v),
+      d1: v => v.toFixed(1).replace('.', ','),
+      d0: v => String(Math.round(v)),
+    };
+
+    function countKpi(el) {
+      const target = parseFloat(el.dataset.target);
+      const fmt = KPI_FMT[el.dataset.kind] || KPI_FMT.d0;
+      if (AW_REDUCED || !(target > 0)) { el.textContent = fmt(target || 0); return; }
+      const DUR = 1400;
+      const t0 = performance.now();
+      const step = now => {
+        const t = Math.min(1, (now - t0) / DUR);
+        el.textContent = fmt(target * (1 - Math.pow(1 - t, 3)));
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    let kpiIo = null;
+    function observeKpiCounters(root) {
+      const els = [...(root || document).querySelectorAll('.kpi-num[data-target]')]
+        .filter(el => !el.dataset.counted);
+      if (!els.length) return;
+      els.forEach(el => { el.dataset.counted = '1'; });
+      if (AW_REDUCED || !('IntersectionObserver' in window)) { els.forEach(countKpi); return; }
+      // mismo margen/umbral que `observeReveals`: la cifra empieza a contar
+      // en el mismo instante en que la tarjeta arranca su entrada.
+      if (!kpiIo) kpiIo = new IntersectionObserver(es => {
+        es.forEach(e => {
+          if (!e.isIntersecting) return;
+          countKpi(e.target);
+          kpiIo.unobserve(e.target);
+        });
+      }, { rootMargin: '0px 0px -12% 0px', threshold: .12 });
+      els.forEach(el => kpiIo.observe(el));
+    }
+
     /* ═══════════════════════════════════════════════════════════
        CONSTRUCCIÓN DEL DOM A PARTIR DE CHAPTERS
        ═══════════════════════════════════════════════════════════ */
@@ -3706,11 +4056,27 @@
              de cada barra ya se explica en el subtítulo o en las píldoras del
              pie, repetirlo arriba sobra. `renderBands` no necesita saberlo:
              sin el hueco en el DOM, ese `if (key)` no hace nada. */
+          /* `topBox`: segunda píldora junto a «Puntuación media» con el
+             reparto de la banda más favorable (p.ej. «Top 2 box» en la
+             escala 1-10). Va en un `.chips` propio y no suelta en `.card-hd`
+             porque ese contenedor reparte sus hijos con `space-between`: sin
+             el envoltorio, las dos píldoras quedarían una en cada punta de
+             la cabecera en vez de juntas. */
           const head = bl.bands
-            ? `<div class="card-hd"><h3>${bl.title}</h3><span class="scorechip" id="${id}_score"></span></div>`
+            ? `<div class="card-hd"><h3>${bl.title}</h3><div class="chips">
+                 <span class="scorechip" id="${id}_score"></span>
+                 ${bl.topBox ? `<span class="scorechip glow" id="${id}_top2"></span>` : ''}
+               </div></div>`
             : `<h3>${bl.title}</h3>`;
           const key = (bl.bands && !bl.noKey) ? `<div class="bandkey" id="${id}_key"></div>` : '';
-          const bsum = bl.bands ? `<div class="bandsum" id="${id}_bsum"></div>` : '';
+          /* `gutter` reutiliza el mismo hueco `_bsum` que `bands`: son la misma
+             píldora, sólo cambia cómo se agrupan las filas (por valor en
+             `bands`, por recuento de filas en `gutter`) y dónde se posa —
+             `bands` cierra la tarjeta como una fila; `gutter` flota en la
+             esquina inferior derecha del propio gráfico (`float`, ver más
+             abajo, donde se inserta dentro de `cv-row` en vez de aquí). */
+          const bsum = (bl.bands || bl.gutter)
+            ? `<div class="bandsum${bl.gutter ? ' float' : ''}" id="${id}_bsum"></div>` : '';
           const canvas = `<div class="cv ${bl.kind === 'agecurve' ? 'cv-260' : bl.span >= 2 ? 'cv-420' : 'cv-300'}"${bl.tall ? ` style="height:${bl.tall}px"` : ''}>
                    <canvas id="${id}"></canvas></div>`;
           /* `gutter`: filete de color a la izquierda del eje de categorías
@@ -3724,7 +4090,7 @@
           const gutter = bl.gutter
             ? `<div class="cv-row"><div class="gutter">${bl.gutter.map(g =>
               `<div class="gutter-seg" style="flex:${g.n} 1 0${g.c ? `;--gc:${g.c}` : ''}">${g.l ? `<span>${esc(g.l)}</span>` : ''}</div>`
-            ).join('')}</div>${canvas}</div>`
+            ).join('')}</div>${canvas}${bsum}</div>`
             : canvas;
           const body = (bl.kind === 'cpmap')
             ? `<div id="${id}_host" style="margin-top:14px"></div>`
@@ -3737,7 +4103,7 @@
                    <div class="duo-h">Nacionalidad</div>
                    <div class="base" id="${id}_nat_base"></div>
                    <div id="${id}_nat_host"></div>`
-                : `${ctl}${key}${gutter}${bsum}`;
+                : `${ctl}${key}${gutter}${bl.gutter ? '' : bsum}`;
           /* `--d` es la posición en la cascada, no el índice del bloque:
              se reinicia cada tres tarjetas. Un capítulo con nueve
              bloques haría esperar 560 ms a la última, y para entonces
@@ -4088,11 +4454,22 @@
        de una porción, no al del gráfico, así que la cifra bailaría con el
        reparto. `afterDatasetsDraw` la pinta encima del anillo, ya con el
        layout resuelto, y de ahí sale el radio interior con el que se escala
-       —el hueco cambia de tamaño con la tarjeta y un cuerpo fijo se saldría. */
-    function donutCenter(txt, cap) {
+       —el hueco cambia de tamaño con la tarjeta y un cuerpo fijo se saldría.
+
+       `val` llega en crudo (no formateado) porque la cifra cuenta desde 0
+       hasta ahí al aparecer: cada fotograma pasa por `pf` su propio valor
+       intermedio, no sólo el final. El contador vive fuera de `draw` y se
+       dispara una única vez con `requestAnimationFrame`; `ch.draw()` dentro
+       del propio callback no reentra en el mismo `draw` en curso —cae en el
+       fotograma siguiente— así que no hay recursión, sólo redibujados
+       sucesivos hasta llegar al valor final. */
+    function donutCenter(val, cap) {
       // la familia sale de Chart.defaults: aquí estaba fijada a Roboto y la
       // cifra del centro se quedaba fuera de la tipografía del informe
       const FAM = Chart.defaults.font.family;
+      const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let started = false, shown = reduceMotion ? val : 0;
+      const DUR = 1400;
       return {
         id: 'dcenter',
         afterDatasetsDraw(ch) {
@@ -4103,6 +4480,18 @@
              cero y la cifra entraría dando saltos de cuerpo mientras crece. */
           const { x, y, innerRadius: r } = el.getProps(['x', 'y', 'innerRadius'], true);
           if (!(r > 34)) return;                 // hueco donde no cabe nada legible
+          if (!started && !reduceMotion) {
+            started = true;
+            const t0 = performance.now();
+            const step = now => {
+              const t = Math.min(1, (now - t0) / DUR);
+              shown = val * (1 - Math.pow(1 - t, 3));   // ease-out cúbico
+              ch.draw();
+              if (t < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+          }
+          const txt = pf(shown, 0);
           const c = ch.ctx;
           const big = Math.min(46, r * .58);
           const small = Math.max(10, Math.min(12.5, r * .17));
@@ -4141,7 +4530,7 @@
       const sum = hit.reduce((s, r) => s + r.value, 0);
       // sin cifra a la que abrirle sitio, el anillo se queda con su hueco justo
       const plug = (ctr && hit.length)
-        ? [donutCenter(pf(st.pctMode ? sum : pct(sum, st.base), 0), ctr.cap)]
+        ? [donutCenter(st.pctMode ? sum : pct(sum, st.base), ctr.cap)]
         : [];
       mk(id, {
         type: 'doughnut',
@@ -4207,17 +4596,118 @@
       const key = document.getElementById(id + '_key');
       const sum = document.getElementById(id + '_bsum');
       const sc = document.getElementById(id + '_score');
-      if (!key && !sum && !sc) return;
+      const top2 = document.getElementById(id + '_top2');
+      if (!key && !sum && !sc && !top2) return;
       const bs = bandStats(st, bl.bands);
       if (key) key.innerHTML = bs.bands.map(b =>
         `<span><i style="background:${b.c}"></i>${esc(b.l)} <em>(${b.r})</em></span>`).join('');
       /* El fondo de la píldora es el propio color de la banda aclarado casi
          hasta el blanco: mismo tono que su barra, sin llegar a competir con
-         ella ni a dejar el texto sin contraste. */
+         ella ni a dejar el texto sin contraste. El texto pasa por `pillInk`
+         y no por `b.c` directo: «No satisfechos» va en gris claro para la
+         barra, pero ese mismo tono como texto sobre un fondo casi blanco no
+         se lee — el icono sí mantiene el color real de la banda. */
       if (sum) sum.innerHTML = bs.bands.map(b =>
-        `<span style="background:${shade(b.c, .92)};color:${b.c}"><i style="background:${b.c}"></i>${esc(b.l)} <b>${pf(pct(b.value, st.base), 0)}</b></span>`).join('');
+        `<span style="background:${shade(b.c, .92)};color:${pillInk(b.c)}"><i style="background:${b.c}"></i>${esc(b.l)} <b>${pf(pct(b.value, st.base), 0)}</b></span>`).join('');
       if (sc) sc.innerHTML = bs.mean == null ? ''
         : `Puntuación media <b>${bs.mean.toFixed(1).replace('.', ',')} / 10</b>`;
+      /* `topBox`: la banda más favorable es la última de la lista declarada
+         en `bl.bands` — no hace falta buscarla por nombre, el orden ya la
+         deja al final igual que la escala que representa. */
+      if (top2 && bl.topBox) {
+        const best = bs.bands[bs.bands.length - 1];
+        top2.innerHTML = `${esc(bl.topBox)} <b>${pf(pct(best.value, st.base), 0)}</b>`;
+      }
+    }
+
+    /* Reparto por segmento de un `gutter` (Bajo/Mid/Alto en ingresos): a
+       diferencia de `bandStats`, que agrupa por valor numérico de la
+       etiqueta, aquí el segmento se decide por recuento de filas (`n`),
+       igual que pinta el filete de color — la fila de `st.rows` cae en el
+       mismo segmento que su banda visual porque las dos leen el mismo orden
+       fijado por `order`. Los segmentos sin `l` (el extremo fuera de escala,
+       como «No tengo ingresos») no generan píldora. */
+    function gutterStats(st, gutter) {
+      const out = [];
+      let i = 0;
+      gutter.forEach(g => {
+        const rows = st.rows.slice(i, i + g.n);
+        i += g.n;
+        if (!g.l) return;
+        out.push({ ...g, value: rows.reduce((s, r) => s + r.value, 0) });
+      });
+      return out;
+    }
+
+    function renderGutterSum(id, st, bl) {
+      const sum = document.getElementById(id + '_bsum');
+      if (!sum) return;
+      const bands = gutterStats(st, bl.gutter);
+      sum.innerHTML = bands.map(b => {
+        const ink = pillInk(b.c);
+        return `<span style="background:${shade(b.c, .92)};color:${ink}"><i style="background:${b.c}"></i>${esc(b.l)} <b>${pf(pct(b.value, st.base), 0)}</b></span>`;
+      }).join('');
+    }
+
+    /* Plugin de Chart.js: lavado de color discreto dentro del relleno de las
+       barras cuya etiqueta está en `targets` (p. ej. `['9','10']`) — no un
+       destello, sino una banda de `--blue-300` que sube y baja despacio y
+       sin parar, como una marea. `wave` usa coseno (no una rampa lineal en
+       diente de sierra) para que el vaivén frene y cambie de sentido en los
+       extremos sin dar un salto al reiniciar el ciclo; `STAGGER` desincroniza
+       las dos barras para que no respiren exactamente a la vez.
+       `globalCompositeOperation: 'source-atop'` recortado al rectángulo de
+       la barra hace que el lavado sólo pinte encima de los píxeles que
+       Chart.js ya dejó ahí —el propio relleno, dibujado justo antes en este
+       mismo `afterDatasetsDraw`— así que queda contenido en la silueta
+       exacta de la barra (puntas redondeadas del `pill` incluidas) sin
+       reconstruir esa forma a mano.
+       No hay `chart.update()` de por medio: el bucle solo pide `ch.draw()`
+       en el siguiente fotograma, igual que `donutCenter`, y se corta solo
+       si `charts[domId]` ya no es esta instancia (la tarjeta se redibujó o
+       el gráfico se destruyó). Da por hecho una barra vertical (`base` es
+       el suelo, `y` la punta) porque hoy sólo lo usa `vbar`; si algún día
+       hiciera falta en `hbar` habría que leer `height` en vez de `base`. */
+    function barFillShimmer(targets, domId) {
+      const t0 = performance.now();
+      const PERIOD = 5200;    // vaivén lento y continuo, no un destello
+      const STAGGER = 550;    // las dos barras no respiran exactamente a la vez
+      return {
+        id: 'barfillshimmer',
+        afterDatasetsDraw(ch) {
+          const meta = ch.getDatasetMeta(0);
+          const labels = ch.data.labels;
+          const c = ch.ctx;
+          const reduceMotion = AW_REDUCED;
+          targets.forEach((lbl, k) => {
+            const i = labels.indexOf(lbl);
+            const el = i >= 0 ? meta.data[i] : null;
+            if (!el) return;
+            const { x, y, base, width } = el.getProps(['x', 'y', 'base', 'width'], true);
+            const rx = x - width / 2, ry = Math.min(y, base), rh = Math.abs(base - y);
+            if (!(width > 0 && rh > 0)) return;
+            const phase = reduceMotion ? .25 : ((performance.now() - t0 + k * STAGGER) % PERIOD) / PERIOD;
+            const wave = (1 - Math.cos(phase * Math.PI * 2)) / 2;   // 0↔1 sin saltos
+            c.save();
+            c.beginPath();
+            c.rect(rx, ry, width, rh);
+            c.clip();
+            c.globalCompositeOperation = 'source-atop';
+            // banda ancha y tenue que recorre de abajo arriba y vuelve: un
+            // lavado, no una raya nítida — de ahí el `bw` generoso.
+            const bw = rh * .65;
+            const bandY = ry + rh - wave * rh;
+            const grad = c.createLinearGradient(rx, bandY - bw, rx, bandY + bw);
+            grad.addColorStop(0, 'rgba(135,152,191,0)');     // --blue-300, transparente
+            grad.addColorStop(.5, 'rgba(135,152,191,.3)');   // --blue-300, pico discreto
+            grad.addColorStop(1, 'rgba(135,152,191,0)');
+            c.fillStyle = grad;
+            c.fillRect(rx, ry, width, rh);
+            c.restore();
+          });
+          if (!reduceMotion) requestAnimationFrame(() => { if (charts[domId] === ch) ch.draw(); });
+        }
+      };
     }
 
     function renderBars(id, st, horizontal, bl) {
@@ -4253,6 +4743,7 @@
       const grad = bl && bl.grad;
       mk(id, {
         type: 'bar',
+        plugins: (bl && bl.glow) ? [barFillShimmer(bl.glow, id)] : [],
         data: {
           labels: rows.map(r => r.label),
           datasets: [{
@@ -4318,6 +4809,7 @@
         }
       });
       if (bl && bl.bands) renderBands(id, st, bl);
+      else if (bl && bl.gutter) renderGutterSum(id, st, bl);
     }
 
     function renderAge(id, a) {
@@ -4874,14 +5366,14 @@
     function renderKpis() {
       const g = genderStats(), a = ageStats();
       const items = [];
-      if (g) items.push({ v: nf(g.total), u: '', l: 'Usuarios registrados en la comunidad' });
-      if (a) items.push({ v: a.mean.toFixed(1).replace('.', ','), u: ' años', l: 'Edad media' });
+      if (g) items.push({ target: g.total, kind: 'n', u: '', l: 'Usuarios registrados en la comunidad' });
+      if (a) items.push({ target: a.mean, kind: 'd1', u: ' años', l: 'Edad media' });
       if (g && g.declared) {
         // misma base que el donut de «Sexo y nacionalidad» (Mujeres+Hombres+No
         // binario, es decir toda la base declarada), para que este KPI y esa
         // porción muestren siempre el mismo porcentaje.
         items.push({
-          v: pct(g.by.F || 0, g.declared).toFixed(1).replace('.', ','), u: '%',
+          target: pct(g.by.F || 0, g.declared), kind: 'd1', u: '%',
           l: 'Mujeres'
         });
       }
@@ -4893,13 +5385,13 @@
         const si = cv.rows.filter(r => /^s[ií]/i.test(norm(r.label)));
         const sum = si.reduce((a, r) => a + r.value, 0);
         items.push({
-          v: pct(sum, cv.base).toFixed(0), u: '%',
+          target: pct(sum, cv.base), kind: 'd0', u: '%',
           l: 'Han comprado tras probar'
         });
       }
       document.getElementById('kpis').innerHTML = items.length
         ? items.map((i, k) => `<div class="kpi" data-reveal style="--d:${k}">
-            <div class="kpi-v">${i.v}<span class="kpi-u">${i.u}</span></div>
+            <div class="kpi-v"><span class="kpi-num" data-target="${i.target}" data-kind="${i.kind}">${KPI_FMT[i.kind](0)}</span><span class="kpi-u">${i.u}</span></div>
             <div class="kpi-l">${i.l}</div></div>`).join('')
         : `<div class="kpi"><div class="kpi-v">—</div><div class="kpi-l">Sin datos disponibles</div></div>`;
 
@@ -4907,6 +5399,7 @@
          había en el esqueleto era un marcador de posición. Hay que
          registrarlos a mano porque el observador ya hizo su ronda. */
       observeReveals(document.getElementById('kpis'));
+      observeKpiCounters(document.getElementById('kpis'));
     }
 
     function renderNotas() {
