@@ -2185,7 +2185,7 @@
         <h1>Conoce a nuestra <em>comunidad de usuarios.</em></h1>
         <p>Cada usuario de nuestra app es distinto, pero su participación, gustos, ubicación y
           opiniones nos permiten segmentarlos en grandes colectivos.</p>
-        <p class="q-big">Demográficos</p>
+        <p class="q-big">Cuántos somos</p>
 
         <div class="kpis" id="kpis">
           <div class="kpi">
@@ -2406,7 +2406,7 @@
        frecuencia). `topN` recorta la cola larga agrupando el resto. */
     const CHAPTERS = [
       {
-        id: 'quienes', n: '01', title: 'Cuántos somos',
+        id: 'quienes', n: '01', title: 'Demográficos',
         q: '¿Qué aspecto tiene nuestra <em>comunidad?</em>',
         blocks: [
           /* La rejilla es de 3 columnas en escritorio y se rellena por filas.
@@ -2421,7 +2421,7 @@
           {
             kind: 'treemap', src: 'ocupacion', title: 'Situación laboral', span: 3, topN: 12,
             sub: 'El área de cada bloque es proporcional al porcentaje. Al filtrar por sexo, cada bloque indica además su desviación en puntos frente al total',
-            filter: 'genero',
+            filter: 'genero', hideSeries: ['No binario'],
           },
         ]
       },
@@ -2477,7 +2477,7 @@
           {
             kind: 'treemap', src: 'intereses', title: 'Temas de interés', span: 3, topN: 15,
             sub: 'El área de cada bloque es proporcional al porcentaje de menciones. Al filtrar por sexo, cada bloque indica además su desviación en puntos frente al total',
-            filter: 'genero',
+            filter: 'genero', hideSeries: ['No binario'],
           },
         ]
       },
@@ -2500,7 +2500,7 @@
           {
             kind: 'board', src: 'dieta', title: 'Dieta',
             sub: 'Ranking sobre las respuestas declaradas; la barra se escala al primer puesto',
-            filter: 'genero',
+            filter: 'genero', hideSeries: ['No binario'],
             edit: [
               [/^sin una preferencia específica.*$/i, 'Sin preferencia'],
               [/\s+o\s+baja en carbohidratos/i, ''],
@@ -2541,6 +2541,7 @@
             kind: 'hbar', src: 'ingresos', title: 'Ingreso mensual neto del usuario',
             sub: 'Al filtrar por sexo, la base y los porcentajes se recalculan sobre la serie elegida',
             order: SCALES.ingresos, noValueAxis: true, span: 2, filter: 'genero',
+            hideSeries: ['No binario'],
             gutter: INCOME_GUTTER,
             /* «No tengo ingresos» no es un tramo de la escala, es el extremo
                que se sale de ella: dejarlo en la rampa azul lo pondría a
@@ -4419,7 +4420,13 @@
       // `all` rotula —con la lista entera de la hoja, para no renombrar de
       // más— y `ss` decide qué botones llegan a existir
       const all = seriesOf(DATASETS[bl.src]);
-      const ss = filterSeries(bl.src);
+      /* `hideSeries`: series que el bloque no ofrece como botón, por su rótulo
+         ya resuelto (el de la hoja cambia entre hojas; el visible, no). Quitar
+         el botón no quita las respuestas: siguen contando en «toda la
+         comunidad», igual que las que caen por el mínimo de `filterSeries`. */
+      const hidden = (bl.hideSeries || []).map(x => norm(x).toLowerCase());
+      const ss = filterSeries(bl.src)
+        .filter(n => !hidden.includes(norm(niceSeries(n, all)).toLowerCase()));
       // hoja sin desglose: el bloque se pinta igual, sin control
       if (!ctl || ss.length < 2) { if (ctl) ctl.remove(); return drawFiltered(id, bl, '', ci, ref); }
 
@@ -4892,11 +4899,11 @@
         options: {
           responsive: true, maintainAspectRatio: false, cutout: '58%',
           plugins: {
-            legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, font: { size: 12 }, padding: 14 } },
+            legend: { position: 'bottom', labels: { boxWidth: 8, boxHeight: 8, font: { size: 10 }, padding: 8 } },
             tooltip: tip({ displayColors: true, callbacks: { label: c => pf(pct(c.parsed, shown)) } }),
             datalabels: {
               color: '#fff', font: { weight: 700, size: 11 },
-              formatter: v => { const p = pct(v, shown); return p < 4 ? '' : pf(p, 1); }
+              formatter: v => { const p = pct(v, shown); return p < 4 ? '' : pf(p, 0); }
             }
           }
         }
