@@ -2706,7 +2706,7 @@
           {
             kind: 'donut', src: 'conversion', title: 'Han comprado un producto tras probarlo',
             sub: 'La única variable del informe que conecta el perfil con retorno para la marca',
-            span: 2, tall: 420, highlight: true, grow: true,
+            span: 2, tall: 420, highlight: true, grow: true, intLabels: true,
             center: { re: /^s[ií]/i, cap: 'han comprado tras probar' },
             grey: /^no/i,
             /* Color explícito y no el de la rampa: las dos porciones que dicen
@@ -4570,7 +4570,10 @@
             }),
             datalabels: {
               color: '#fff', font: { weight: 700, size: 12 },
-              formatter: v => { const p = pct(v, st.base); return p < 5 ? '' : pf(p, 1); }
+              /* `intLabels`: porciones en entero. El decimal sólo estorba
+                 cuando la porción ya es grande y la cifra del hueco, que es
+                 la que se lee primero, va redondeada. */
+              formatter: v => { const p = pct(v, st.base); return p < 5 ? '' : pf(p, bl && bl.intLabels ? 0 : 1); }
             }
           }
         }
