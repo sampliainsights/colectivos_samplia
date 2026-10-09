@@ -1333,6 +1333,21 @@
       border-radius: 999px;
     }
 
+    /* Dos controles en la misma línea (sexo y tramo de edad). Si no caben
+       los dos, el segundo pasa debajo; y si en móvil no caben ni sus siete
+       botones, se desplaza en lateral. */
+    .segrow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      column-gap: 8px;
+    }
+
+    .segbar.age {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
     .segbar:empty {
       display: none;
     }
@@ -1456,6 +1471,149 @@
         border-top: 1px solid var(--line);
         padding-top: 18px;
       }
+    }
+
+    /* ═══ SOPORTES · COROPLETA 3D ══════════════════════════════════════
+       El lienzo WebGL va en una caja de alto fijo: MapLibre necesita saber
+       su tamaño al nacer, y un alto que dependiera del contenido lo dejaría
+       a cero. Los controles reutilizan `.segbar`; el selector de periodo se
+       viste igual para que la fila lea como un solo control. */
+    .sop-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+      margin-top: 14px;
+    }
+
+    .sop-bar .segbar {
+      margin-top: 0;
+    }
+
+    .sop-sel select {
+      appearance: none;
+      font: inherit;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--ink);
+      padding: 7px 30px 7px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--n-100) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236C7280' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+      cursor: pointer;
+    }
+
+    .sop-kpis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 32px;
+      margin-top: 18px;
+    }
+
+    .sop-kpi b {
+      display: block;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sop-kpi:first-child b {
+      color: var(--red);
+    }
+
+    .sop-kpi span {
+      font-size: 11.5px;
+      color: var(--text-3);
+    }
+
+    .sop-map {
+      position: relative;
+      height: 540px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      background: var(--n-100);
+    }
+
+    @container (max-width: 690px) {
+      .sop-map {
+        height: 420px;
+      }
+    }
+
+    .sop-map>.fail {
+      position: absolute;
+      inset: 0;
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .sop-legend {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 16px;
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-3);
+    }
+
+    .sop-ramp {
+      display: flex;
+      gap: 2px;
+    }
+
+    .sop-ramp span {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      min-width: 84px;
+    }
+
+    .sop-ramp i {
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    .sop-rank {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sop-rank button {
+      appearance: none;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      width: 100%;
+      padding: 5px 8px;
+      margin-bottom: 4px;
+      border: 1px solid var(--n-200);
+      border-radius: 7px;
+      font: inherit;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color .18s var(--ease);
+    }
+
+    .sop-rank button:hover {
+      border-color: var(--blue-300);
+    }
+
+    .sop-note {
+      margin-top: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--text-4);
     }
 
     /* ═══ ENLACES A INFORMES EXTERNOS ══════════════════════════════════ */
@@ -2255,6 +2413,7 @@
 
     const K1 = '2PACX-1vTS_KoLXvG0aPMYu8yqqurdYeYS-IUZnTyTBPwGneicSgjx7LYlUxG5P3CaueTARXXFH6dDBtXLEhcY';
     const K2 = '2PACX-1vR9fmH3y2heHFNQuV6ff36DVpRwXnZmaPmg4YBJstdfgOuYTT-bM-GiYyflO_CFMRHEfl1FD1euWAhG';
+    const K3 = '2PACX-1vQTapGrHkADIyaqa1x_gbRf2qAc3u7UDLL0yR-c9QnzyAkb6MDm0NKQzIkeIcD3FcFluYEX_x2rIoZT';
 
     /* ── Catálogo de fuentes ──────────────────────────────────────────
        `cols` permite forzar las columnas cuando la detección automática
@@ -2290,6 +2449,11 @@
       { id: 'dieta', label: 'Dieta', key: K2, gid: '526250752', xtab: 'genero',
         fold: [['No binario', 'No disponible']] },
       { id: 'bebidas', label: 'Bebidas', key: K2, gid: '1092848113' },
+      /* Hoja de tres entradas: respuesta × edad (año a año) × sexo. La lee
+         `toCube`, que deja el cruce por sexo en `by` —como las demás hojas
+         cruzadas— y guarda además el desglose por edad para el filtro de
+         tramos. */
+      { id: 'ropa', label: 'Gasto anual en ropa', key: K3, gid: '154393186', xtab: 'sexo y edad', cube: true },
       { id: 'supermercado', label: 'Supermercado', key: K2, gid: '343891121' },
       { id: 'canal', label: 'Canal de compra', key: K2, gid: '185413363' },
       { id: 'frecuencia', label: 'Frecuencia de compra', key: K2, gid: '1663370744' },
@@ -2344,6 +2508,13 @@
         'No tengo ingresos',                  // cierra: es la ausencia de ingreso, no un tramo
       ],
       experiencia: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+      ropa: [
+        'Menos de 150 € al año',
+        'Entre 151 € y 300 € al año',
+        'Entre 301 € y 600 € al año',
+        'Entre 601 € y 1.000 € al año',
+        'Más de 1.000 € al año',
+      ],
     };
 
     /* Sangrado común del eje de categorías en «Nuestro momento de vida»: las
@@ -2430,6 +2601,19 @@
         q: '¿Cómo se reparte la comunidad por el <em>territorio?</em>',
         blocks: [
           { kind: 'cpmap', src: 'cp', title: 'Usuarios por provincia', span: 3 },
+          /* No cuelga de DATASOURCES: la hoja es una tabla mes × soporte con
+             coordenadas, no un par etiqueta/valor, así que la lee y la pinta
+             su propio renderizador (`renderSoportes`). */
+          /* OCULTO temporalmente (pendiente de replantear). Para restaurarlo,
+             descomenta el bloque.
+          {
+            // `period` fija el periodo y retira el selector: '2026', '2025-10',
+            // '12m' o 'all'. Sin él, el lector elige en el desplegable.
+            kind: 'soportes3d', title: 'Participaciones en los soportes de Samplia · 2026', span: 3,
+            period: '2026',
+            sub: 'Cada hexágono agrupa los soportes que caen dentro; altura y color crecen con las participaciones. Arrastra con clic derecho (o Ctrl + arrastrar) para inclinar y girar el mapa',
+          },
+          */
         ]
       },
       {
@@ -2507,6 +2691,18 @@
             ],
           },
           { kind: 'board', src: 'bebidas', title: 'Bebidas', sub: 'Ranking sobre las respuestas declaradas; la barra se escala al primer puesto', topN: 10 },
+          /* Fila propia (`span 3`): con dos controles —sexo y tramo de edad—
+             no cabe en la columna estrecha de la fila de arriba. */
+          {
+            kind: 'hbar', src: 'ropa', title: 'Gasto anual en ropa',
+            sub: 'Al filtrar por sexo o por edad, la base y los porcentajes se recalculan sobre la selección',
+            /* `tall`: son cinco barras; con el lienzo de 420 px de las
+               tarjetas anchas cada una quedaba aislada en su franja. */
+            order: SCALES.ropa, noValueAxis: true, span: 3, tall: 220,
+            filter: 'genero', hideSeries: ['No binario', 'Sin dato'], ageFilter: true,
+            edit: [[/\s*al año$/i, '']],
+            sumChip: { re: /^entre (151|301) €/i, cap: 'Entre 151 € y 600 €' },
+          },
         ]
       },
       {
@@ -3101,6 +3297,61 @@
       });
     }
 
+    /* ── Tabla de tres entradas ───────────────────────────────────────
+       Respuesta × edad × sexo: la respuesta sólo viene en la primera fila de
+       su grupo (tabla dinámica), la edad año a año en la columna rotulada
+       «edad» y el sexo en las columnas de su derecha. La columna de sexo sin
+       rótulo es la de quien no lo declaró y se suma a «NA»; la fila sin edad
+       cuenta en el total pero en ningún tramo.
+
+       Devuelve las parejas de siempre con `by` por sexo —así el filtro de sexo,
+       `seriesOf` y las notas la tratan como una hoja cruzada más— y `ages`,
+       [{age, by}], para proyectar sobre un tramo de edad. */
+    function toCube(tbl) {
+      const rows = [tbl.headers, ...tbl.rows].filter(r => r && r.some(c => norm(c) !== ''));
+      const hi = rows.findIndex(r => r.some(c => norm(c).toLowerCase() === 'edad'));
+      if (hi < 0) return [];
+      const head = rows[hi];
+      const ai = head.findIndex(c => norm(c).toLowerCase() === 'edad');
+      const nCols = Math.max(...rows.map(r => r.length));
+      const cols = [];
+      for (let c = ai + 1; c < nCols; c++) cols.push({ c, name: norm(head[c]) || 'NA' });
+      const names = [...new Set(cols.map(x => x.name))];
+
+      const out = [];
+      let cur = null;
+      for (let i = hi + 1; i < rows.length; i++) {
+        const r = rows[i];
+        const label = norm(r[0]);
+        if (label) {
+          if (SKIP.test(label)) { cur = null; continue; }
+          cur = { label, value: 0, by: Object.fromEntries(names.map(n => [n, 0])), ages: [] };
+          out.push(cur);
+        }
+        if (!cur) continue;
+        const age = toNum(norm(r[ai]));
+        const by = {};
+        cols.forEach(({ c, name }) => {
+          const v = toNum(norm(r[c])) || 0;
+          by[name] = (by[name] || 0) + v;
+          cur.by[name] += v;
+          cur.value += v;
+        });
+        cur.ages.push({ age, by });
+      }
+      return out.filter(r => r.value > 0);
+    }
+
+    /* Valor de una fila para un sexo (`series`) y un tramo de `BANDS` (`age`,
+       por su rótulo); cualquiera de los dos vacío es «todos». */
+    function cellValue(r, series, age) {
+      if (!age || !r.ages) return series ? (r.by[series] || 0) : r.value;
+      const b = BANDS.find(x => x.l === age);
+      if (!b) return 0;
+      return r.ages.reduce((a, x) => (x.age === null || x.age < b.lo || x.age > b.hi) ? a
+        : a + (series ? (x.by[series] || 0) : Object.values(x.by).reduce((s, v) => s + v, 0)), 0);
+    }
+
     /* Series de una hoja cruzada; [] si la hoja es marginal. */
     const seriesOf = d => (d && d.length && d[0].by) ? Object.keys(d[0].by) : [];
     /* Los nombres de serie vienen de la hoja; se rotulan en el idioma del
@@ -3280,7 +3531,7 @@
           const r = await st.f();
           // si la hoja deja de venir cruzada, se lee como marginal y el bloque
           // sigue pintando: sólo se queda sin filtro
-          let pairs = s.xtab ? toXtab(r) : [];
+          let pairs = s.cube ? toCube(r) : s.xtab ? toXtab(r) : [];
           if (pairs.length && s.fold) pairs = foldSeries(pairs, s.fold);
           if (!pairs.length) pairs = toPairs(r, s.cols);
           if (!pairs.length) throw new Error('NO_PAIRS');
@@ -3548,8 +3799,8 @@
       /* `series`: proyecta una tabla cruzada sobre una sola columna. Se hace
          aquí y no en el render para que la base, el orden, el topN y los
          porcentajes se recalculen sobre la selección, no sobre el total. */
-      if (opt.series && d0 && d0.length && d0[0].by)
-        d0 = d0.map(r => ({ ...r, value: r.by[opt.series] || 0 }));
+      if ((opt.series || opt.age) && d0 && d0.length && d0[0].by)
+        d0 = d0.map(r => ({ ...r, value: cellValue(r, opt.series, opt.age) }));
       if (!d0 || !d0.length) return null;
       const d = d0.filter(r => !HIDDEN_ANSWER.test(norm(r.label))
         && !(opt.drop && opt.drop.test(norm(r.label))));
@@ -4068,7 +4319,11 @@
                  <span class="scorechip" id="${id}_score"></span>
                  ${bl.topBox ? `<span class="scorechip glow" id="${id}_top2"></span>` : ''}
                </div></div>`
-            : `<h3>${bl.title}</h3>`;
+            : bl.sumChip
+              ? `<div class="card-hd"><h3>${bl.title}</h3><div class="chips">
+                   <span class="scorechip" id="${id}_sum"></span>
+                 </div></div>`
+              : `<h3>${bl.title}</h3>`;
           const key = (bl.bands && !bl.noKey) ? `<div class="bandkey" id="${id}_key"></div>` : '';
           /* `gutter` reutiliza el mismo hueco `_bsum` que `bands`: son la misma
              píldora, sólo cambia cómo se agrupan las filas (por valor en
@@ -4093,7 +4348,7 @@
               `<div class="gutter-seg" style="flex:${g.n} 1 0${g.c ? `;--gc:${g.c}` : ''}">${g.l ? `<span>${esc(g.l)}</span>` : ''}</div>`
             ).join('')}</div>${canvas}${bsum}</div>`
             : canvas;
-          const body = (bl.kind === 'cpmap')
+          const body = (bl.kind === 'cpmap' || bl.kind === 'soportes3d')
             ? `<div id="${id}_host" style="margin-top:14px"></div>`
             : (bl.kind === 'split' || bl.kind === 'treemap' || bl.kind === 'board')
               ? `${ctl}<div id="${id}_host"></div>`
@@ -4392,11 +4647,13 @@
     /* `ci`/`ref` sólo los usa el treemap (color estable entre vistas y
        desviación en puntos). Los demás tipos se repintan con la serie elegida
        y nada más: en un gráfico de barras la comparación la hace ya el eje. */
-    function drawFiltered(id, bl, series, ci, ref) {
-      const st = blockStats(bl.src, { ...bl, series });
+    function drawFiltered(id, bl, series, ci, ref, age) {
+      const st = blockStats(bl.src, { ...bl, series, age });
       if (!st) return failBlock(id, `La hoja «${srcLabel(bl.src)}» no ha respondido.`);
       const all = seriesOf(DATASETS[bl.src]);
-      setBase(id, baseText(st) + (series ? ` · ${esc(niceSeries(series, all))}` : ' · toda la comunidad'));
+      setBase(id, baseText(st)
+        + (series ? ` · ${esc(niceSeries(series, all))}` : (age ? '' : ' · toda la comunidad'))
+        + (age ? ` · ${esc(age)} años` : ''));
       const k = bl.kind === 'auto' ? autoKind(st, bl) : bl.kind;
       if (k === 'treemap') renderTreemap(id, st, bl, { ci, ref: series ? ref : null });
       else if (k === 'board') renderBoard(id, st, bl);
@@ -4438,17 +4695,40 @@
       ctl.setAttribute('aria-label', `Filtrar «${bl.title}» por ${dim}`);
       ctl.innerHTML = segs.map((g, i) => `<button type="button" role="radio"
           aria-checked="${i === 0}" data-s="${esc(g.k)}"${i === 0 ? ' class="on"' : ''}>${esc(g.t)}</button>`).join('');
-      ctl.addEventListener('click', e => {
+      /* `ageFilter`: segundo control, por tramo de edad, para las hojas que
+         traen la edad (`toCube`). Se combina con el de sexo: cada control
+         guarda su selección en `cur` y el gráfico se repinta con las dos. */
+      const cur = { s: '', a: '' };
+      const redraw = () => drawFiltered(id, bl, cur.s, ci, ref, cur.a);
+      const bind = (bar, k) => bar.addEventListener('click', e => {
         const b = e.target.closest('button');
         if (!b || b.classList.contains('on')) return;
-        [...ctl.children].forEach(x => {
+        [...bar.children].forEach(x => {
           const on = x === b;
           x.classList.toggle('on', on);
           x.setAttribute('aria-checked', String(on));
         });
-        drawFiltered(id, bl, b.dataset.s, ci, ref);
+        cur[k] = b.dataset.s;
+        redraw();
       });
-      drawFiltered(id, bl, '', ci, ref);
+      bind(ctl, 's');
+      if (bl.ageFilter && DATASETS[bl.src][0].ages) {
+        const ab = document.createElement('div');
+        ab.className = 'segbar age';
+        ab.setAttribute('role', 'radiogroup');
+        ab.setAttribute('aria-label', `Filtrar «${bl.title}» por edad`);
+        ab.innerHTML = [{ k: '', t: 'Todas las edades' }, ...BANDS.map(b => ({ k: b.l, t: b.l }))]
+          .map((g, i) => `<button type="button" role="radio" aria-checked="${i === 0}"
+            data-s="${esc(g.k)}"${i === 0 ? ' class="on"' : ''}>${esc(g.t)}</button>`).join('');
+        /* La tarjeta es una columna flex: suelto, cada control ocuparía su
+           propia fila. Envueltos en `.segrow` van uno al lado del otro. */
+        const row = document.createElement('div');
+        row.className = 'segrow';
+        ctl.before(row);
+        row.append(ctl, ab);
+        bind(ab, 'a');
+      }
+      redraw();
     }
 
     /* Cifra en el hueco del donut. Existe porque el número que importa no
@@ -4819,6 +5099,14 @@
         }
       });
       if (bl && bl.bands) renderBands(id, st, bl);
+      /* `sumChip`: píldora en la cabecera con la suma de las respuestas que
+         casan con `re` (sobre la etiqueta de la hoja, sin recortes). Se
+         pinta aquí para que se recalcule con cada filtro. */
+      const sc = bl && bl.sumChip && document.getElementById(id + '_sum');
+      if (sc) {
+        const v = st.all.filter(r => bl.sumChip.re.test(norm(r.label))).reduce((a, r) => a + r.value, 0);
+        sc.innerHTML = `${esc(bl.sumChip.cap)} <b>${pf(pct(v, st.base), 0)}</b>`;
+      }
       else if (bl && bl.gutter) renderGutterSum(id, st, bl);
     }
 
@@ -5277,6 +5565,438 @@
     }
 
     /* ═══════════════════════════════════════════════════════════
+       SOPORTES · coropleta 3D de participaciones
+
+       La hoja trae una fila por soporte y mes con su coordenada. Los puntos
+       se agregan en una malla hexagonal (la coropleta) y cada celda se
+       extruye: altura y color dicen lo mismo —participaciones—, la altura
+       para el vistazo y el color para leer la clase en la leyenda.
+       Las librerías (MapLibre + deck.gl, ~1,5 MB) se piden sólo al llegar
+       aquí: el resto del informe no las necesita y no debe esperarlas.
+       ═══════════════════════════════════════════════════════════ */
+    const SOP_SRC = {
+      label: 'Participaciones por soporte', gid: '80175408',
+      key: '2PACX-1vRrU9FJ3e5_JwSdKnfQfJeW7es4CuTEfC8b1M4wI5n7I2MduvKfJoBVFAqqEpRauxvWoVF8MSok_Qk6',
+    };
+    const SOP_LIBS = {
+      js: ['https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js',
+        'https://cdn.jsdelivr.net/npm/deck.gl@9.1.14/dist.min.js'],
+      css: 'https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css',
+    };
+    // Mapa base claro y sin clave de API: el color tiene que ser el del dato.
+    const SOP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+    /* Caja de cada ciudad (oeste, sur, este, norte). Un soporte cuya
+       coordenada reparada no cae en ninguna queda fuera y se cuenta en la nota. */
+    const SOP_CITIES = {
+      madrid: { label: 'Madrid', box: [-4.6, 39.9, -3.0, 41.2] },
+      barcelona: { label: 'Barcelona', box: [1.6, 41.1, 2.6, 41.8] },
+    };
+    // `w`: ancho de la celda de lado a lado, en metros.
+    const SOP_CELLS = [{ l: '500 m', w: 500 }, { l: '1 km', w: 1000 }, { l: '2 km', w: 2000 }];
+    // La clase más clara de la rampa se pierde contra el gris del mapa base.
+    const SOP_RAMP = MAP_RAMP.slice(1);
+    const SOP_EXCLUDE = /^(no usar|prueba)\b/i;
+    /* Altura de la celda con más participaciones, como fracción de la
+       diagonal que ocupan los soportes de la ciudad. Fija en metros, Madrid
+       —el doble de extensa— salía con columnas romas y Barcelona se salía
+       del encuadre; así las dos llenan el mapa en la misma proporción. */
+    const SOP_H = .28;
+    const SOP_VIEW = { pitch: 52, bearing: -18 };
+    const SOP = { st: { city: 'madrid', period: 'all', cell: 1000 }, map: null, overlay: null, ro: null };
+
+    let sopLibsP = null;
+    function loadSopLibs() {
+      if (window.maplibregl && window.deck) return Promise.resolve();
+      if (sopLibsP) return sopLibsP;
+      if (!document.querySelector(`link[href="${SOP_LIBS.css}"]`)) {
+        const l = document.createElement('link');
+        l.rel = 'stylesheet'; l.href = SOP_LIBS.css;
+        document.head.appendChild(l);
+      }
+      const one = src => new Promise((ok, ko) => {
+        const s = document.createElement('script');
+        s.src = src; s.onload = ok;
+        s.onerror = () => { s.remove(); ko(new Error('LIB ' + src)); };
+        document.head.appendChild(s);
+      });
+      sopLibsP = Promise.all(SOP_LIBS.js.map(one)).catch(e => { sopLibsP = null; throw e; });
+      return sopLibsP;
+    }
+
+    /* Coordenadas: la hoja las sirve con coma decimal y, en varios soportes,
+       rotas al pasar por un formato numérico — sin separador decimal
+       (`4139926663028`), con el decimal en el sitio equivocado (`4,139967453`)
+       o en notación científica (`4,04299E+16`). Los dígitos siguen siendo los
+       buenos, así que se recoloca el decimal hasta que el valor cae en su
+       rango: latitud entre 10 y 100, longitud entre 1 y 10 (las dos ciudades
+       están a menos de 10° del meridiano cero, a un lado y a otro). */
+    function sopCoord(raw, lo, hi) {
+      let v = parseFloat(String(raw).trim().replace(',', '.'));
+      if (!isFinite(v) || v === 0) return null;
+      const s = Math.sign(v), v0 = Math.abs(v);
+      v = v0;
+      for (let n = 0; v >= hi && n < 40; n++) v /= 10;
+      for (let n = 0; v < lo && n < 40; n++) v *= 10;
+      return v >= lo && v < hi ? { v: s * v, fixed: v !== v0 } : null;
+    }
+
+    const sopCityOf = (lng, lat) => Object.keys(SOP_CITIES).find(k => {
+      const b = SOP_CITIES[k].box;
+      return lng >= b[0] && lng <= b[2] && lat >= b[1] && lat <= b[3];
+    }) || null;
+
+    async function loadSoportes() {
+      const { headers, rows } = await loadCsvRetry(urlsFor(SOP_SRC).csv, 3);
+      const h = headers.map(x => x.toLowerCase());
+      const ix = { m: h.indexOf('mes'), id: h.indexOf('location_id'), n: h.indexOf('ubicacion'),
+        la: h.indexOf('lat'), lo: h.indexOf('lng'), p: h.indexOf('participaciones') };
+      if ([ix.m, ix.n, ix.la, ix.lo, ix.p].some(i => i < 0)) throw new Error('COLUMNAS');
+
+      const locs = new Map(), months = new Set();
+      let undated = 0;
+      rows.forEach(r => {
+        const name = norm(r[ix.n]);
+        const v = parseInt(String(r[ix.p]).replace(/\D/g, ''), 10) || 0;
+        if (!name || !v) return;
+        const k = norm(ix.id >= 0 ? r[ix.id] : '') || name;
+        let l = locs.get(k);
+        if (!l) { l = { name, total: 0, by: {}, city: null }; locs.set(k, l); }
+        if (!l.city && !SOP_EXCLUDE.test(name)) {
+          const la = sopCoord(r[ix.la], 10, 100), lo = sopCoord(r[ix.lo], 1, 10);
+          const city = la && lo ? sopCityOf(lo.v, la.v) : null;
+          if (city) Object.assign(l, { lat: la.v, lng: lo.v, city, fixed: la.fixed || lo.fixed });
+        }
+        l.total += v;
+        /* Mes en d/m/aaaa. Las filas del 1/1/1970 son participaciones sin
+           fecha (la época Unix sale de un nulo): cuentan en el histórico y
+           en ningún periodo. */
+        const m = String(r[ix.m]).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+        if (m && +m[3] >= 2000) {
+          const ym = `${m[3]}-${m[2].padStart(2, '0')}`;
+          months.add(ym);
+          l.by[ym] = (l.by[ym] || 0) + v;
+        } else undated += v;
+      });
+      const all = [...locs.values()];
+      return {
+        locs: all.filter(l => l.city),
+        dropped: all.filter(l => !l.city),
+        months: [...months].sort().reverse(),
+        undated,
+      };
+    }
+
+    const SOP_MES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
+      'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const sopMonthLabel = ym => { const [y, m] = ym.split('-'); return `${SOP_MES[+m - 1]} ${y}`; };
+
+    /* Periodo → conjunto de meses ('all' = sin filtro, incluye lo no fechado).
+       «Últimos 12 meses» se cuenta desde el último mes con datos, no desde
+       hoy: si la hoja se actualiza con retraso, el periodo no sale recortado. */
+    function sopMonths(d, p) {
+      if (p === 'all') return null;
+      if (p === '12m') return new Set(d.months.slice(0, 12));
+      if (/^\d{4}$/.test(p)) return new Set(d.months.filter(m => m.startsWith(p)));
+      return new Set([p]);
+    }
+    const sopVal = (l, ms) => ms
+      ? Object.entries(l.by).reduce((s, [m, v]) => s + (ms.has(m) ? v : 0), 0)
+      : l.total;
+
+    /* Malla hexagonal de vértice arriba, en metros sobre una proyección local
+       equirrectangular: a la escala de una ciudad el error es despreciable y
+       así el hexágono mide lo mismo en Madrid que en Barcelona. */
+    function sopBins(d, st) {
+      const ms = sopMonths(d, st.period);
+      const pts = d.locs.filter(l => l.city === st.city)
+        .map(l => ({ l, v: sopVal(l, ms) })).filter(p => p.v > 0);
+      const total = pts.reduce((s, p) => s + p.v, 0);
+      if (!pts.length) return { cells: [], pts, total, breaks: [] };
+      const lat0 = pts.reduce((s, p) => s + p.l.lat, 0) / pts.length;
+      const lng0 = pts.reduce((s, p) => s + p.l.lng, 0) / pts.length;
+      const kx = 111320 * Math.cos(lat0 * Math.PI / 180), ky = 110574;
+      const R = st.cell / Math.sqrt(3), S3 = Math.sqrt(3);
+      const bins = new Map();
+      pts.forEach(p => {
+        const x = (p.l.lng - lng0) * kx, y = (p.l.lat - lat0) * ky;
+        const q = (S3 / 3 * x - y / 3) / R, r = (2 / 3 * y) / R, s = -q - r;
+        let rq = Math.round(q), rr = Math.round(r);
+        const rs = Math.round(s);
+        const dq = Math.abs(rq - q), dr = Math.abs(rr - r), ds = Math.abs(rs - s);
+        if (dq > dr && dq > ds) rq = -rr - rs; else if (dr > ds) rr = -rq - rs;
+        const key = rq + ',' + rr;
+        let b = bins.get(key);
+        if (!b) {
+          const cx = R * S3 * (rq + rr / 2), cy = R * 1.5 * rr, poly = [];
+          // .9: deja una junta entre celdas vecinas para que se lean como piezas
+          for (let i = 0; i < 6; i++) {
+            const a = Math.PI / 180 * (60 * i - 30);
+            poly.push([lng0 + (cx + .9 * R * Math.cos(a)) / kx, lat0 + (cy + .9 * R * Math.sin(a)) / ky]);
+          }
+          b = { key, poly, v: 0, items: [] };
+          bins.set(key, b);
+        }
+        b.v += p.v; b.items.push(p);
+      });
+      const cells = [...bins.values()].sort((a, b) => b.v - a.v);
+      cells.forEach(c => c.items.sort((a, b) => b.v - a.v));
+      const all = d.locs.filter(l => l.city === st.city);
+      const dx = (Math.max(...all.map(l => l.lng)) - Math.min(...all.map(l => l.lng))) * kx;
+      const dy = (Math.max(...all.map(l => l.lat)) - Math.min(...all.map(l => l.lat))) * ky;
+      const breaks = quantileBreaks(cells.map(c => c.v), SOP_RAMP.length);
+      cells.forEach(c => c.cls = classOf(c.v, breaks));
+      pts.sort((a, b) => b.v - a.v);
+      pts.forEach(p => p.cls = cells.find(c => c.items.includes(p)).cls);
+      return { cells, pts, total, breaks, H: Math.max(1500, SOP_H * Math.hypot(dx, dy)) };
+    }
+
+    const sopRgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+
+    function sopLegend(b, st) {
+      const vals = b.cells.map(c => c.v);
+      const lo = Math.min(...vals), hi = Math.max(...vals);
+      const ramp = SOP_RAMP.map((c, i) => {
+        const a = i === 0 ? lo : Math.floor(b.breaks[i - 1]) + 1;
+        const z = i === SOP_RAMP.length - 1 ? hi : Math.floor(b.breaks[i]);
+        const txt = a > z ? '·' : a === z ? nf(a) : `${nf(a)}–${nf(z)}`;
+        return `<span><i style="background:${c}"></i>${txt}</span>`;
+      }).join('');
+      const w = SOP_CELLS.find(c => c.w === st.cell).l;
+      return `<div class="sop-ramp" aria-hidden="true">${ramp}</div>
+        <div>Participaciones por celda de ${w} · color por quintiles, altura proporcional</div>`;
+    }
+
+    function sopRank(b) {
+      if (!b.pts.length) return '';
+      const vMax = b.pts[0].v;
+      const rows = b.pts.slice(0, 10).map((p, i) => {
+        const w = (100 * p.v / vMax).toFixed(1);
+        return `<li><button type="button" data-fly="${p.l.lng},${p.l.lat}"
+            title="Acercar el mapa a ${esc(p.l.name)}"
+            style="background:linear-gradient(90deg,rgba(55,83,149,.13) 0 ${w}%,var(--n-50) ${w}% 100%)">
+          <span style="flex:0 0 13px;text-align:right;font-size:10.5px;font-weight:700;color:var(--n-500)">${i + 1}</span>
+          <span style="flex:0 0 10px;height:10px;border-radius:2px;border:1px solid rgba(15,23,41,.14);background:${SOP_RAMP[p.cls]}"></span>
+          <span style="flex:1 1 auto;min-width:0;font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.l.name)}</span>
+          <span style="font-size:12px;font-weight:800">${nf(p.v)}</span>
+          <span style="flex:0 0 38px;text-align:right;font-size:10.5px;color:var(--n-600)">${pf(pct(p.v, b.total), 1)}</span>
+        </button></li>`;
+      }).join('');
+      return `<div style="font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+          color:var(--n-600);margin:0 0 8px 2px">Top 10 soportes</div>
+        <ol class="sop-rank">${rows}</ol>`;
+    }
+
+    function sopTooltip(b, cityLabel) {
+      return ({ object: c }) => {
+        if (!c || !c.items) return null;
+        const list = c.items.slice(0, 6).map(p =>
+          `<div style="display:flex;gap:12px;justify-content:space-between"><span>${esc(p.l.name)}</span><b>${nf(p.v)}</b></div>`).join('');
+        const more = c.items.length > 6 ? `<div style="color:#9BA1AE">y ${c.items.length - 6} más</div>` : '';
+        return {
+          html: `<div style="font-size:13px;font-weight:800;margin-bottom:2px">${nf(c.v)} participaciones</div>
+            <div style="color:#9BA1AE;margin-bottom:6px">${pf(pct(c.v, b.total), 1)} de ${cityLabel} · ${c.items.length} ${c.items.length === 1 ? 'soporte' : 'soportes'}</div>
+            ${list}${more}`,
+          style: {
+            background: '#0F1729', color: '#fff', font: '500 11.5px Manrope, system-ui, sans-serif',
+            padding: '10px 12px', borderRadius: '10px', maxWidth: '280px',
+            boxShadow: '0 8px 24px rgba(15,23,41,.25)',
+          },
+        };
+      };
+    }
+
+    // Encuadre de la ciudad con todos sus soportes, sea cual sea el periodo.
+    function sopFrame(d, city, animate) {
+      const ls = d.locs.filter(l => l.city === city);
+      if (!ls.length || !SOP.map) return;
+      const lngs = ls.map(l => l.lng), lats = ls.map(l => l.lat);
+      const cam = SOP.map.cameraForBounds(
+        [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]],
+        { padding: 60 });
+      if (!cam) return;
+      const to = { center: cam.center, zoom: Math.min(cam.zoom - .4, 13), ...SOP_VIEW };
+      animate ? SOP.map.flyTo({ ...to, duration: 1400 }) : SOP.map.jumpTo(to);
+    }
+
+    function sopDraw(id, d) {
+      const st = SOP.st, b = sopBins(d, st), city = SOP_CITIES[st.city].label;
+      const vMax = b.cells.length ? b.cells[0].v : 1;
+      const top = b.cells[0];
+      document.getElementById(id + '_kpis').innerHTML = `
+        <div class="sop-kpi"><b>${nf(b.total)}</b><span>participaciones en ${city}</span></div>
+        <div class="sop-kpi"><b>${nf(b.pts.length)}</b><span>soportes con actividad</span></div>
+        <div class="sop-kpi"><b>${top ? pf(pct(top.v, b.total), 0) : '—'}</b><span>se concentra en la celda líder</span></div>`;
+      document.getElementById(id + '_legend').innerHTML = b.cells.length ? sopLegend(b, st) : '';
+      document.getElementById(id + '_rank').innerHTML = sopRank(b)
+        || `<div class="fail"><b>Sin participaciones</b><small>No hay actividad en ${city} para este periodo.</small></div>`;
+      SOP.overlay.setProps({
+        getTooltip: sopTooltip(b, city),
+        layers: [new deck.PolygonLayer({
+          id: 'sop-hex', data: b.cells,
+          extruded: true, wireframe: true, stroked: false,
+          getPolygon: c => c.poly,
+          getElevation: c => c.v / vMax * b.H,
+          getFillColor: c => [...sopRgb(SOP_RAMP[c.cls]), 235],
+          getLineColor: [255, 255, 255, 110],
+          material: { ambient: .6, diffuse: .5, shininess: 24, specularColor: [255, 255, 255] },
+          pickable: true, autoHighlight: true,
+          highlightColor: [...sopRgb('#E0253F'), 235],   // el acento: la celda que se está leyendo
+          transitions: { getElevation: 600 },
+        })],
+      });
+    }
+
+    async function renderSoportes(id, bl) {
+      const host = document.getElementById(id + '_host');
+      if (!host) return;
+      if (SOP.ro) { SOP.ro.disconnect(); SOP.ro = null; }
+      if (SOP.map) { try { SOP.map.remove(); } catch (e) { } SOP.map = null; SOP.overlay = null; }
+      host.innerHTML = `<div class="cv cv-420"><div class="fail"><b>Cargando mapa…</b><small>Descargando la hoja de soportes y el motor 3D.</small></div></div>`;
+      setBase(id, '');
+
+      let d;
+      try {
+        [d] = await Promise.all([loadSoportes(), loadSopLibs()]);
+      } catch (e) {
+        console.error('[soportes]', e);
+        const lib = /^LIB/.test(e.message);
+        host.innerHTML = `<div class="fail"><b>Sin datos</b><small>${lib
+          ? 'No se ha podido cargar el motor de mapas (cdn.jsdelivr.net).'
+          : `La hoja «${SOP_SRC.label}» no ha respondido.`}</small></div>`;
+        return;
+      }
+      if (!d.locs.length) {
+        host.innerHTML = `<div class="fail"><b>Sin datos</b><small>Ningún soporte de la hoja tiene coordenadas en Madrid o Barcelona.</small></div>`;
+        return;
+      }
+
+      const st = SOP.st;
+      if (!SOP_CITIES[st.city]) st.city = 'madrid';
+      const years = [...new Set(d.months.map(m => m.slice(0, 4)))];
+      const lock = bl && bl.period;
+      if (lock) st.period = lock;
+      else if (st.period !== 'all' && st.period !== '12m' && !years.includes(st.period) && !d.months.includes(st.period))
+        st.period = 'all';
+      const pLabel = lock && (/^\d{4}$/.test(lock) ? lock : lock === '12m' ? 'los últimos 12 meses'
+        : lock === 'all' ? '' : sopMonthLabel(lock));
+
+      const ms = sopMonths(d, st.period);
+      const live = d.locs.filter(l => sopVal(l, ms) > 0);
+      const total = live.reduce((s, l) => s + sopVal(l, ms), 0);
+      /* Periodo fijado sin una sola participación: se dice cuál es el último
+         mes que trae la hoja, que es lo que explica el hueco. */
+      if (lock && !total) {
+        host.innerHTML = `<div class="fail"><b>Sin participaciones en ${esc(pLabel || 'este periodo')}</b><small>La hoja
+          «${SOP_SRC.label}» no trae ninguna fila de ese periodo${d.months.length
+            ? `; el último mes con datos es ${sopMonthLabel(d.months[0])}` : ''}.</small></div>`;
+        return;
+      }
+      setBase(id, `Base: ${nf(total)} participaciones${pLabel ? ` en ${pLabel}` : ''} · ${nf(live.length)} soportes de Madrid y Barcelona`);
+      const opt = (v, l) => `<option value="${v}"${st.period === v ? ' selected' : ''}>${l}</option>`;
+      const seg = (k, items) => `<div class="segbar" role="group" data-k="${k}">${items.map(([v, l]) =>
+        `<button type="button" data-v="${v}" class="${String(st[k]) === String(v) ? 'on' : ''}"
+          aria-pressed="${String(st[k]) === String(v)}">${l}</button>`).join('')}</div>`;
+
+      const fixed = d.locs.filter(l => l.fixed).length;
+      const dropV = d.dropped.reduce((s, l) => s + l.total, 0);
+      const notes = [
+        fixed ? `${fixed} soportes llegan con la coordenada mal formateada en la hoja (sin separador decimal o en notación científica) y se han recolocado recuperando sus dígitos.` : '',
+        d.dropped.length ? `Quedan fuera ${d.dropped.length} ubicaciones de prueba o sin coordenada válida en Madrid o Barcelona, que suman ${nf(dropV)} participaciones.` : '',
+        d.undated && !lock ? `${nf(d.undated)} participaciones no tienen mes en la hoja: cuentan en «Todo el histórico» y en ningún otro periodo.` : '',
+      ].filter(Boolean).join(' ');
+
+      host.innerHTML = `
+        <div class="sop-bar">
+          ${seg('city', Object.entries(SOP_CITIES).map(([k, c]) => [k, c.label]))}
+          ${lock ? '' : `<label class="sop-sel"><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Periodo</span>
+            <select data-k="period">
+              ${opt('all', 'Todo el histórico')}${opt('12m', 'Últimos 12 meses')}
+              <optgroup label="Por año">${years.map(y => opt(y, y)).join('')}</optgroup>
+              <optgroup label="Por mes">${d.months.map(m => opt(m, sopMonthLabel(m))).join('')}</optgroup>
+            </select></label>`}
+          ${seg('cell', SOP_CELLS.map(c => [c.w, 'Celda ' + c.l]))}
+        </div>
+        <div class="sop-kpis" id="${id}_kpis"></div>
+        <div class="maphost">
+          <div class="mapcol">
+            <div class="sop-map" id="${id}_gl" role="img"
+              aria-label="Mapa 3D de participaciones por soporte en Madrid y Barcelona"></div>
+            <div class="sop-legend" id="${id}_legend"></div>
+          </div>
+          <aside class="maprail" id="${id}_rank"></aside>
+        </div>
+        ${notes ? `<p class="sop-note">${notes}</p>` : ''}`;
+
+      const gl = document.getElementById(id + '_gl');
+      try {
+        SOP.map = new maplibregl.Map({
+          container: gl, style: SOP_STYLE, center: [-3.69, 40.43], zoom: 10, ...SOP_VIEW,
+          maxPitch: 70, attributionControl: { compact: true },
+          /* La página se recorre con la rueda: sin esto, pasar por encima del
+             mapa secuestraba el scroll y lo convertía en zoom. */
+          cooperativeGestures: true,
+          locale: {
+            'CooperativeGesturesHandler.WindowsHelpText': 'Usa Ctrl + rueda para hacer zoom en el mapa',
+            'CooperativeGesturesHandler.MacHelpText': 'Usa ⌘ + rueda para hacer zoom en el mapa',
+            'CooperativeGesturesHandler.MobileHelpText': 'Usa dos dedos para mover el mapa',
+            'NavigationControl.ZoomIn': 'Acercar', 'NavigationControl.ZoomOut': 'Alejar',
+            'NavigationControl.ResetBearing': 'Orientar al norte',
+          },
+        });
+        SOP.map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+        SOP.overlay = new deck.MapboxOverlay({ interleaved: false, layers: [] });
+        SOP.map.addControl(SOP.overlay);
+      } catch (e) {
+        console.error('[soportes] WebGL', e);
+        gl.innerHTML = `<div class="fail"><b>Mapa no disponible</b><small>Este navegador no permite WebGL. El ranking de la derecha sigue siendo válido.</small></div>`;
+        SOP.map = null;
+      }
+
+      // La tarjeta entra animada y puede cambiar de ancho: el lienzo lo sigue.
+      if (SOP.map && window.ResizeObserver) {
+        SOP.ro = new ResizeObserver(() => SOP.map && SOP.map.resize());
+        SOP.ro.observe(gl);
+      }
+
+      const redraw = () => {
+        if (SOP.overlay) sopDraw(id, d);
+        else {
+          const b = sopBins(d, st);
+          document.getElementById(id + '_rank').innerHTML = sopRank(b);
+        }
+      };
+      sopFrame(d, st.city, false);
+      redraw();
+
+      host.addEventListener('click', ev => {
+        const fly = ev.target.closest('[data-fly]');
+        if (fly && SOP.map) {
+          const [lng, lat] = fly.dataset.fly.split(',').map(Number);
+          SOP.map.flyTo({ center: [lng, lat], zoom: 13.6, ...SOP_VIEW, duration: 1200 });
+          return;
+        }
+        const btn = ev.target.closest('.segbar button');
+        if (!btn) return;
+        const k = btn.parentElement.dataset.k;
+        const v = k === 'cell' ? +btn.dataset.v : btn.dataset.v;
+        if (st[k] === v) return;
+        st[k] = v;
+        btn.parentElement.querySelectorAll('button').forEach(x => {
+          const on = x === btn;
+          x.classList.toggle('on', on);
+          x.setAttribute('aria-pressed', on);
+        });
+        if (k === 'city') sopFrame(d, v, true);
+        redraw();
+      });
+      const sel = host.querySelector('select[data-k="period"]');
+      if (sel) sel.addEventListener('change', ev => {
+        st.period = ev.target.value;
+        redraw();
+      });
+    }
+
+    /* ═══════════════════════════════════════════════════════════
        ORQUESTADOR DE BLOQUES
        ═══════════════════════════════════════════════════════════ */
     function renderChapters() {
@@ -5310,6 +6030,7 @@
               return;
             }
             if (bl.kind === 'cpmap') { renderMapa(id); return; }
+            if (bl.kind === 'soportes3d') { renderSoportes(id, bl); return; }
             if (bl.filter) { renderFilterBlock(id, bl); return; }
 
             const st = blockStats(bl.src, bl);
